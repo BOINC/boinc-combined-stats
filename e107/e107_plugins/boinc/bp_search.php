@@ -1,0 +1,72 @@
+<?php
+// Remember that we must include class2.php
+require_once("../../class2.php");
+
+require_once("bp_functions.php");
+//@include_once(e_PLUGIN."bp/languages/".e_LANGUAGE.".php");
+//@include_once(e_PLUGIN."bp/languages/English.php");
+
+mysql_select_db($db_db);
+
+$searchname = $_POST["searchname"];
+$exact = $_POST["exact"];
+$submit = $_POST["submit"];
+
+$mytext = "<table class='fborder'>\n";
+
+if ($searchname=="")
+{
+   $mytext .= "<tr><th class='forumheader'>Input Error</th></tr>";
+   $mytext .= "<tr><td class='nforumthread'>No user specified to search for</td></tr></table>";
+   mysql_select_db($db_e107);
+   require_once(HEADERF);
+   $ns->tablerender("BOINC User Search",$mytext);
+   require_once(FOOTERF);
+   return;
+}
+
+
+   $query = "SELECT a.name,a.user_cpid,b.name as pname,a.project_rank_credit from b_users a, b_projects b where a.project_id=b.project_id and ";
+
+   if ($exact=="y")
+      $query .= "a.name = '$searchname'";
+   else
+      $query .= "a.name like '%$searchname%'";
+
+   $query .= " order by user_cpid";
+   $res = mysql_query($query);
+
+   if (!$res) {
+     echo "<b>Error performing query: " . mysql_error() . "</b>";
+     exit();
+   }
+
+   $mytext .= "<tr><th class='forumheader2'>User Name</th><th class='forumheader2'>Project Name</th><th class='forumheader2'>Project rank</th><th class='forumheader2'>User CPID</th></tr>\n";
+
+   $count = 0;
+
+   while ($row = mysql_fetch_array($res) ) 
+   {
+      $name=$row["name"];
+      $user_cpid=$row["user_cpid"];
+      $project=$row["pname"];
+      $pr=$row["project_rank_credit"];
+
+      if ($count %2 == 0)
+        $cc = "nforumthread";
+      else 
+        $cc = "nforumthread2";
+      $count++;
+
+  
+      $mytext .= "<tr><td class='$cc'><a href=\"get_user.php?cpid=$user_cpid\">$name</a>";
+      $mytext .= "</td><td class='$cc'>$project</td><td class='$cc'>$pr</td><td class='$cc'>$user_cpid</td></tr>\n";    
+   }
+
+   $mytext .= "</table>";
+
+   mysql_select_db($db_e107);
+   require_once(HEADERF);
+   $ns->tablerender("User Search Results",$mytext);
+   require_once(FOOTERF);
+?>
