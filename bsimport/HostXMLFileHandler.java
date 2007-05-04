@@ -323,8 +323,13 @@ public class HostXMLFileHandler extends DefaultHandler {
                   create_time = parseDataValue;
               else if (localName.equalsIgnoreCase("rpc_time"))
                   rpc_time = parseDataValue;
-              else if (localName.equalsIgnoreCase("timezone"))
+              else if (localName.equalsIgnoreCase("timezone")) {
                   timezone = parseDataValue;
+                  if (timezone.length() > 8) {
+                      log.warn("Host timezone out of range: "+timezone+ " on host id "+host_id);
+                      timezone = "0";
+                  }
+              }
               else if (localName.equalsIgnoreCase("ncpus")) {
                   ncpus = Integer.parseInt(parseDataValue);
                   if (ncpus > 500) ncpus = 0;

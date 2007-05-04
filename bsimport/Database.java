@@ -1780,7 +1780,7 @@ public class Database {
     public void ProjectsRead(Vector<Project> myProjects) throws SQLException {
         
         myProjects.clear();
-        String query = "select project_id,name,host_file,user_file,team_file,shortname,data_dir,active,retired from b_projects where active='Y'";
+        String query = "select project_id,name,host_file,user_file,team_file,shortname,data_dir,active,retired,gr from b_projects where active='Y'";
         
         Statement statement = null;
         ResultSet resultSet = null;
@@ -1815,7 +1815,11 @@ public class Database {
                     p.retired = true;
                 else
                     p.retired = false;
-                
+                t = resultSet.getString("gr");
+                if (t.compareToIgnoreCase("Y")==0)
+                    p.gr = true;
+                else
+                    p.gr = false;
                 myProjects.add(p);
 
             }
@@ -2543,23 +2547,29 @@ public void DoCombinedStatsProjectUpdates (int tc_day, int rac_day, int week) th
 
     public void DoGRCombinedStatsProjectUpdates (int tc_day, int rac_day, int week) throws SQLException {
         
+
+        // Update b_cpid table to mark all GR users
+        String query0 = "update b_cpid,(select distinct a.b_cpid_id from b_users a, b_projects b where a.project_id=b.project_id and b.gr='Y') grusers set b_cpid.gr='Y' where b_cpid.table_id=grusers.b_cpid_id";
+        
+        // update the b_cteams table to mark all GR teams
+        String query1 = "update b_cteams,(select distinct a.b_cteam_id from b_teams a, b_projects b where a.project_id=b.project_id and b.gr='Y') grteams set b_cteams.gr='Y' where b_cteams.table_id=grteams.b_cteam_id";
         
         // update user count, total credit, rac
-        String query1 = "update b_projects, (select sum(total_credit) as tc, sum(rac) as rc from b_projects where gr='Y') cc set b_projects.total_credit=cc.tc,b_projects.rac=cc.rc where b_projects.project_id=39";
-        //String query2 = "update b_projects, (select count(*) as cnt from b_cpid where project_count > 0 and rac > 0) cc set b_projects.active_users=cc.cnt where b_projects.project_id=39";
-        
-        // update country count
-        //String query3 = "update b_projects, (select count(*) as cnt from (select distinct country_id from b_users) uc) cc set b_projects.country_count=cc.cnt where b_projects.project_id=39";
+        String query2 = "update b_projects, (select sum(total_credit) as tc, sum(rac) as rc from b_projects where gr='Y') cc set b_projects.total_credit=cc.tc,b_projects.rac=cc.rc where b_projects.project_id=39";
+        String query3 = "update b_projects, (select count(*) as cnt from b_cpid where project_count > 0 and rac > 0 and gr='Y') cc set b_projects.active_users=cc.cnt where b_projects.project_id=39";
+        String query4 = "update b_projects, (select count(*) as cnt from b_cpid where project_count > 0 and gr='Y') cc set b_projects.user_count=cc.cnt where b_projects.project_id=39";
         
         // update computer count
-        //String query4 = "update b_projects, (select sum(computer_count) as cnt from b_cpid) cc set b_projects.host_count=cc.cnt where b_projects.project_id=39";
-        //String query5 = "update b_projects, (select sum(active_computer_count) as cnt from b_cpid) cc set b_projects.active_hosts=cc.cnt where b_projects.project_id=39";
+        String query5 = "update b_projects, (select sum(computer_count) as cnt from b_cpid where gr='Y') cc set b_projects.host_count=cc.cnt where b_projects.project_id=39";
+        String query6 = "update b_projects, (select sum(active_computer_count) as cnt from b_cpid where gr='Y') cc set b_projects.active_hosts=cc.cnt where b_projects.project_id=39";
                 
-        
         // update team counts
-        //String query6 = "update b_projects, (select count(*) as cnt from b_cteams where project_count > 0) cc set b_projects.team_count=cc.cnt where b_projects.project_id=39";
-        //String query7 = "update b_projects, (select count(*) as cnt from b_cteams where project_count > 0 and rac > 0) cc set b_projects.active_teams=cc.cnt where b_projects.project_id=39";
-        
+        String query7 = "update b_projects, (select count(*) as cnt from b_cteams where project_count > 0 and gr='Y') cc set b_projects.team_count=cc.cnt where b_projects.project_id=39";
+        String query8 = "update b_projects, (select count(*) as cnt from b_cteams where project_count > 0 and rac > 0 and gr='Y') cc set b_projects.active_teams=cc.cnt where b_projects.project_id=39";
+
+        // update country count
+        //String query9 = "update b_projects, (select count(*) as cnt from (select distinct country_id from b_users) uc) cc set b_projects.country_count=cc.cnt where b_projects.project_id=39";
+
     
         Statement statement = null;
     
@@ -2567,20 +2577,26 @@ public void DoCombinedStatsProjectUpdates (int tc_day, int rac_day, int week) th
         try {            
             statement = cDBConnection.createStatement();
     
-            log.info("updating project 39 total credit, rac");
+            log.info("Marking GR project users");
+            statement.execute(query0);
+            log.info("Marking GR project teams");
             statement.execute(query1);
-//            log.info("updating project 39 active user count");
-//            statement.execute(query2);
-//            log.info("updating project 39 country count");
-//            statement.execute(query3);
-//            log.info("Updating project 39 computer count");
-//            statement.execute(query4);
-//            log.info("Updating project 39 active computer count");
-//            statement.execute(query5);
-//            log.info("Updating project 39 team count");
-//            statement.execute(query6);
-//            log.info("Updating project 39 active team count");
-//            statement.execute(query7);
+            log.info("updating project 39 total credit, rac");
+            statement.execute(query2);
+            log.info("updating project 39 active user count");
+            statement.execute(query3);
+            log.info("updating project 39 user count");
+            statement.execute(query4);            
+            log.info("Updating project 39 computer count");
+            statement.execute(query5);
+            log.info("Updating project 39 active computer count");
+            statement.execute(query6);
+            log.info("Updating project 39 team count");
+            statement.execute(query7);
+            log.info("Updating project 39 active team count");
+            statement.execute(query8);
+//          log.info("updating project 39 country count");
+//          statement.execute(query9);
             statement.close();
     
             return;
