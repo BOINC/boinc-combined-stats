@@ -243,10 +243,18 @@ public class HostXMLFileHandler extends DefaultHandler {
                   host_id = Integer.parseInt(parseDataValue);
               else if (localName.equalsIgnoreCase("userid")) 
                   user_id = Integer.parseInt(parseDataValue);
-              else if (localName.equalsIgnoreCase("total_credit"))
-                  total_credit = parseDataValue;
-              else if (localName.equalsIgnoreCase("expavg_credit"))
-                  expavg_credit = parseDataValue;
+              else if (localName.equalsIgnoreCase("total_credit")) {
+            	  if (parseDataValue.length() > 20) {
+                	  log.error("Host Credit outside normal range: host_id:" + host_id + " value: " + parseDataValue);
+                	  total_credit = "0";
+                  } else  total_credit = parseDataValue;
+              }
+              else if (localName.equalsIgnoreCase("expavg_credit")) {
+            	  if (parseDataValue.length() > 20) {
+                	  log.error("Host Rac outside normal range: host_id:" + host_id + " value: " + parseDataValue);
+                	  expavg_credit = "0";
+                  } else  expavg_credit = parseDataValue;
+              }
               else if (localName.equalsIgnoreCase("expavg_time"))
                   expavg_time = parseDataValue;
               else if (localName.equalsIgnoreCase("credit_per_cpu_sec"))

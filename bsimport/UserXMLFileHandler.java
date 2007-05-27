@@ -313,10 +313,18 @@ public class UserXMLFileHandler extends DefaultHandler {
               }
               else if (localName.equalsIgnoreCase("create_time"))
                   create_time = parseDataValue;
-              else if (localName.equalsIgnoreCase("total_credit"))
-                  total_credit = parseDataValue;
-              else if (localName.equalsIgnoreCase("expavg_credit"))
-                  expavg_credit = parseDataValue;
+              else if (localName.equalsIgnoreCase("total_credit")) {
+                  if (parseDataValue.length() > 20) {
+                	  log.error("User Credit outside normal range: user_id:" + user_id + " value: " + parseDataValue);
+                	  total_credit = "0";
+                  } else  total_credit = parseDataValue;
+              }
+              else if (localName.equalsIgnoreCase("expavg_credit")) {
+            	  if (parseDataValue.length() > 20) {
+                	  log.error("User Rac outside normal range: user_id:" + user_id + " value: " + parseDataValue);
+                	  expavg_credit = "0";
+                  } else  expavg_credit = parseDataValue;
+              }
               else if (localName.equalsIgnoreCase("expavg_time"))
                   expavg_time = parseDataValue;
               else if (localName.equalsIgnoreCase("cpid"))
