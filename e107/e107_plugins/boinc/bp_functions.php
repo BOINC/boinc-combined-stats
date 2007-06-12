@@ -104,7 +104,7 @@ function get_project_info($project_id) {
    
    mysql_select_db($db_db);
 
-   $query = "select name, url, user_count, host_count, team_count, active_users, active_hosts, active_teams, total_credit, rac, country_count,project_status, project_for_profit from b_projects where project_id=$project_id";
+   $query = "select name, url, user_count, host_count, team_count, active_users, active_hosts, active_teams, total_credit, rac, country_count,project_status, project_for_profit, shown from b_projects where project_id=$project_id";
 
 
    $data = "<table style='width:100%' class='nforumholder' cellpadding='0' cellspacing='0'>\n<tr><th class='forumheader3' colspan=3>Project Summary</th></tr>\n";
@@ -129,6 +129,7 @@ function get_project_info($project_id) {
              $rac = $row["rac"];
              $pstatus = $row["project_status"];
              $pprofit = $row["project_for_profit"];
+             $shown = $row["shown"];
           }
    }
 
@@ -142,7 +143,7 @@ function get_project_info($project_id) {
    $ateam_count = number_format($ateam_count,0);
 
    $data .= "<tr><td class='nforumthread'>Project Name</td><td class='nforumthread' colspan=2>$name</td></tr>\n";
-   if ($url != "") {
+   if ($url != "" && $shown=="Y") {
    $data .= "<tr><td class='nforumthread'>Project URL</td><td class='nforumthread' colspan=2><a href=\"$url\">$url</a></td></tr>\n";
 
    } 
@@ -190,14 +191,14 @@ if(!function_exists("display_project_stats")) {
           "a.country_count,a.total_credit,a.project_id,a.y_user_count,".
           "a.y_host_count,a.y_team_count,a.y_country_count,a.y_total_credit,".
           "a.last_update,a.active_hosts,a.active_users,a.active_teams,".
-          "a.y_active_users,a.y_active_teams,a.y_active_hosts from b_projects a ".
+          "a.y_active_users,a.y_active_teams,a.y_active_hosts,a.shown, a.retired from b_projects a ".
           "where (a.retired='N' and a.shown='Y') or a.project_id=19 order by a.total_credit desc";
       } else {
       $query = "select a.name,a.url,a.user_count,a.host_count,a.team_count,".
           "a.country_count,a.total_credit,a.project_id,a.y_user_count,".
           "a.y_host_count,a.y_team_count,a.y_country_count,a.y_total_credit,".
           "a.last_update,a.active_hosts,a.active_users,a.active_teams,".
-          "a.y_active_users,a.y_active_teams,a.y_active_hosts from b_projects a ".
+          "a.y_active_users,a.y_active_teams,a.y_active_hosts, a.shown, a.retired from b_projects a ".
           "where a.retired='Y' and a.shown='Y' order by a.total_credit desc";
       }
       $res = mysql_query($query);
@@ -257,6 +258,8 @@ if(!function_exists("display_project_stats")) {
       $yauser_count=$row["y_active_users"];
       $yahost_count=$row["y_active_hosts"];
       $yateam_count=$row["y_active_teams"];
+      $shown = $row["shown"];
+      $retired = $row["retired"];
 
       if ($i % 2 == 0) $bc = "nforumthread";
       else $bc = "nforumthread2";
@@ -356,10 +359,13 @@ if(!function_exists("display_project_stats")) {
 
       $DATA .= "<tr>\n";
       if ($active > 0)
-         $DATA .= "<td rowspan=2 class='$bc'><a href=\"bp.php?project=$pid\">$name</a></td>\n";
+         $DATA .= "<td rowspan=2 class='$bc'><a href=\"bp.php?project=$pid\">$name</a>";
       else
-         $DATA .= "<td class='$bc'><a href=\"bp.php?project=$pid\">$name</a></td>\n";
-         $DATA .= "<td align=right class='$bc'>$user_count</td>\n";
+         $DATA .= "<td class='$bc'><a href=\"bp.php?project=$pid\">$name</a>";
+         if ($url != "" && $pid != 19 && $shown=="Y" && $retired=="N") 
+           $DATA .= "&nbsp;<a href=\"$url\">(site)</a>";
+
+         $DATA .= "</td>\n<td align=right class='$bc'>$user_count</td>\n";
          if ($active > 0) $DATA .= "<td align=right class='$bc'><font size=-1 color=\"$cuc\">($suc$uc)</font></td>\n";
          $DATA .= "<td align=right class='$bc'>$host_count</td>\n";
          if ($active > 0) $DATA .= "<td align=right class='$bc'><font size=-1 color=\"$chc\">($shc$hc)</font></td>\n";
