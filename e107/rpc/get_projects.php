@@ -3,6 +3,7 @@ header('Content-type: text/xml');
 
 print "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\n";
 print "<projects>\n";
+print "<title>Project List</title>\n";
 
 include ('/home/virtual/netsoft-online.com/home/boinc/dbconnect.php');
 

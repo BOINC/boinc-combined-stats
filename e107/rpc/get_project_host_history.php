@@ -5,6 +5,7 @@ $project = $_GET["projectid"];
 
 print "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\n";
 print "<project_host_count_history>\n";
+print "<title>Project Host Count History</title>\n";
 
 include ('/home/virtual/netsoft-online.com/home/boinc/dbconnect.php');
 
