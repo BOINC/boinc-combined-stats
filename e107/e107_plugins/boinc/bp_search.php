@@ -3,8 +3,7 @@
 require_once("../../class2.php");
 
 require_once("bp_functions.php");
-//@include_once(e_PLUGIN."bp/languages/".e_LANGUAGE.".php");
-//@include_once(e_PLUGIN."bp/languages/English.php");
+include_lan(e_PLUGIN.'boinc/languages/'.e_LANGUAGE.'/lan_boinc.php');
 
 mysql_select_db($db_db);
 
@@ -16,11 +15,11 @@ $mytext = "<table class='fborder'>\n";
 
 if ($searchname=="")
 {
-   $mytext .= "<tr><th class='forumheader'>Input Error</th></tr>";
-   $mytext .= "<tr><td class='nforumthread'>No user specified to search for</td></tr></table>";
+   $mytext .= "<tr><th class='forumheader'>".LAN_270."</th></tr>";
+   $mytext .= "<tr><td class='nforumthread'>".LAN_271."</td></tr></table>";
    mysql_select_db($db_e107);
    require_once(HEADERF);
-   $ns->tablerender("BOINC User Search",$mytext);
+   $ns->tablerender(LAN_272,$mytext);
    require_once(FOOTERF);
    return;
 }
@@ -37,11 +36,11 @@ if ($searchname=="")
    $res = mysql_query($query);
 
    if (!$res) {
-     echo "<b>Error performing query: " . mysql_error() . "</b>";
+     echo "<b>".LAN_232.": " . mysql_error() . "</b>";
      exit();
    }
 
-   $mytext .= "<tr><th class='forumheader2'>User Name</th><th class='forumheader2'>Project Name</th><th class='forumheader2'>Project rank</th><th class='forumheader2'>User CPID</th></tr>\n";
+   $mytext .= "<tr><th class='forumheader2'>".LAN_273."</th><th class='forumheader2'>".LAN_274."</th><th class='forumheader2'>".LAN_275."</th><th class='forumheader2'>".LAN_276."</th></tr>\n";
 
    $count = 0;
 
@@ -67,6 +66,6 @@ if ($searchname=="")
 
    mysql_select_db($db_e107);
    require_once(HEADERF);
-   $ns->tablerender("User Search Results",$mytext);
+   $ns->tablerender(LAN_277,$mytext);
    require_once(FOOTERF);
 ?>

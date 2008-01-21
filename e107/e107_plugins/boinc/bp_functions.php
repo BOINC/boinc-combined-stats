@@ -47,6 +47,14 @@ function project_color($p) {
     case 'ABC@home': return 'burlywood'; // (222,184,135)
     case 'BOINC alpha test': return 'beige'; // (245,245,220)
     case 'WEP-M+2': return 'mediumspringgreen'; // (0,250,154)
+    case 'Zivis Superordenador Ciudadano': return 'AntiqueWhite1'; // (255,239,219)
+    case 'SciLINC': return 'aliceblue'; // (240,248,255)
+    case 'APS@Home': return 'coral3'; // (205,91,69)
+    case 'PS3GRID': return 'darkcyan'; // (i0,139,139)
+    case 'Superlink@Technion': return 'darkolivegreen1'; // (202,255,112)
+    case 'BRaTS@Home': return 'indianred1'; // (255,106,106)
+    case 'Cosmology@Home': return 'khaki'; // (240,230,140)
+    case 'SHA 1 Collision Search': return 'lemonchiffon'; // (255,250,205)
 
     }
     return 'gray4';
@@ -107,7 +115,7 @@ function get_project_info($project_id) {
    $query = "select name, url, user_count, host_count, team_count, active_users, active_hosts, active_teams, total_credit, rac, country_count,project_status, project_for_profit, shown from b_projects where project_id=$project_id";
 
 
-   $data = "<table style='width:100%' class='nforumholder' cellpadding='0' cellspacing='0'>\n<tr><th class='forumheader3' colspan=3>Project Summary</th></tr>\n";
+   $data = "<table style='width:100%' class='nforumholder' cellpadding='0' cellspacing='0'>\n<tr><th class='forumheader3' colspan=3>".LAN_300."</th></tr>\n";
 
    $res = mysql_query($query);
    if (!$res) {
@@ -142,33 +150,33 @@ function get_project_info($project_id) {
    $ahost_count = number_format($ahost_count,0);
    $ateam_count = number_format($ateam_count,0);
 
-   $data .= "<tr><td class='nforumthread'>Project Name</td><td class='nforumthread' colspan=2>$name</td></tr>\n";
+   $data .= "<tr><td class='nforumthread'>".LAN_301."</td><td class='nforumthread' colspan=2>$name</td></tr>\n";
    if ($url != "" && $shown=="Y") {
-   $data .= "<tr><td class='nforumthread'>Project URL</td><td class='nforumthread' colspan=2><a href=\"$url\">$url</a></td></tr>\n";
+   $data .= "<tr><td class='nforumthread'>".LAN_302."</td><td class='nforumthread' colspan=2><a href=\"$url\">$url</a></td></tr>\n";
 
    } 
-   $data .= "<tr><td class='nforumthread' >Development Stage</td><td class='nforumthread' colspan=2>$pstatus</td></tr>\n"; 
-   $data .= "<tr><td class='nforumthread' >Project for Profit</td><td class='nforumthread' colspan=2>$pprofit</td></tr>\n"; 
-   $data .= "<tr><td class='nforumthread' >Total Granted Credit</td><td class='nforumthread' colspan=2>$total_credit</td></tr>\n";
-   $data .= "<tr><td class='nforumthread' >Recent Average Credit</td><td class='nforumthread' colspan=2>$rac</td></tr>\n";
+   $data .= "<tr><td class='nforumthread' >".LAN_303."</td><td class='nforumthread' colspan=2>$pstatus</td></tr>\n"; 
+   $data .= "<tr><td class='nforumthread' >".LAN_304."</td><td class='nforumthread' colspan=2>$pprofit</td></tr>\n"; 
+   $data .= "<tr><td class='nforumthread' >".LAN_305."</td><td class='nforumthread' colspan=2>$total_credit</td></tr>\n";
+   $data .= "<tr><td class='nforumthread' >".LAN_306."</td><td class='nforumthread' colspan=2>$rac</td></tr>\n";
 
-   $data .= "<tr><td class='nforumthread' >&nbsp;</td><td class='nforumthread2'>Total</td><td class='nforumthread2'>Active</td></tr>\n";
-   $data .= "<tr><td class='nforumthread'>User Count</td><td class='nforumthread'>$user_count</td><td class='nforumthread'>$auser_count</td></tr>\n";
-   $data .= "<tr><td class='nforumthread'>Team Count</td><td class='nforumthread'>$team_count</td><td class='nforumthread'>$ateam_count</td></tr>\n";
-   $data .= "<tr><td class='nforumthread'>Host Count</td><td class='nforumthread'>$host_count</td><td class='nforumthread'>$ahost_count</td></tr>\n";
+   $data .= "<tr><td class='nforumthread' >&nbsp;</td><td class='nforumthread2'>".LAN_307."</td><td class='nforumthread2'>".LAN_308."</td></tr>\n";
+   $data .= "<tr><td class='nforumthread'>".LAN_309."</td><td class='nforumthread'>$user_count</td><td class='nforumthread'>$auser_count</td></tr>\n";
+   $data .= "<tr><td class='nforumthread'>".LAN_310."</td><td class='nforumthread'>$team_count</td><td class='nforumthread'>$ateam_count</td></tr>\n";
+   $data .= "<tr><td class='nforumthread'>".LAN_311."</td><td class='nforumthread'>$host_count</td><td class='nforumthread'>$ahost_count</td></tr>\n";
 
-   $data .= "<tr><td class='forumheader3' colspan=3>Granted Credit History</td></tr>\n";
-   $data .= "<tr><td class='nforumthread' colspan=3><center><img alt=\"Credit Graph\" src=project_graph.php?projectid=$project_id&amp;type=5 /></center></td></tr>\n";
+   $data .= "<tr><td class='forumheader3' colspan=3>".LAN_312."</td></tr>\n";
+   $data .= "<tr><td class='nforumthread' colspan=3><center><img alt=\"".LAN_312."\" src=project_graph.php?projectid=$project_id&amp;type=5 /></center></td></tr>\n";
 
-   $data .= "<tr><td class='forumheader3' colspan=3>User Count History</td></tr>\n";
-   $data .= "<tr><td class='nforumthread' colspan=3><center><img alt=\"User Graph\" src=project_graph.php?projectid=$project_id&amp;type=1 /></center></td></tr>\n";
-   $data .= "<tr><td class='nforumthread' colspan=3><center><img alt=\"User Graph 2\" src=project_graph.php?projectid=$project_id&amp;type=6 /></center></td></tr>\n";
-   $data .= "<tr><td class='forumheader3' colspan=3>Team Count History</td></tr>\n";
-   $data .= "<tr><td class='nforumthread' colspan=3><center><img alt=\"Team Graph\" src=project_graph.php?projectid=$project_id&amp;type=3 /></center></td></tr>\n";
-   $data .= "<tr><td class='nforunthread' colspan=3><center><img alt=\"Team Graph 2\" src=project_graph.php?projectid=$project_id&amp;type=8 /></center></td></tr>\n";
-   $data .= "<tr><td class='forumheader3' colspan=3>Host Count History</td></tr>\n";
-   $data .= "<tr><td class='nforumthread' colspan=3><center><img alt=\"Host Graph\" src=project_graph.php?projectid=$project_id&amp;type=2 /></center></td></tr>\n";
-   $data .= "<tr><td class='nforumthread' colspan=3><center><img alt=\"Host Graph 2\" src=project_graph.php?projectid=$project_id&amp;type=7 /></center></td></tr>\n";
+   $data .= "<tr><td class='forumheader3' colspan=3>".LAN_313."</td></tr>\n";
+   $data .= "<tr><td class='nforumthread' colspan=3><center><img alt=\"".LAN_313."\" src=project_graph.php?projectid=$project_id&amp;type=1 /></center></td></tr>\n";
+   $data .= "<tr><td class='nforumthread' colspan=3><center><img alt=\"".LAN_313."\" src=project_graph.php?projectid=$project_id&amp;type=6 /></center></td></tr>\n";
+   $data .= "<tr><td class='forumheader3' colspan=3>".LAN_314."</td></tr>\n";
+   $data .= "<tr><td class='nforumthread' colspan=3><center><img alt=\"".LAN_314."\" src=project_graph.php?projectid=$project_id&amp;type=3 /></center></td></tr>\n";
+   $data .= "<tr><td class='nforunthread' colspan=3><center><img alt=\"".LAN_314."\" src=project_graph.php?projectid=$project_id&amp;type=8 /></center></td></tr>\n";
+   $data .= "<tr><td class='forumheader3' colspan=3>".LAN_315."</td></tr>\n";
+   $data .= "<tr><td class='nforumthread' colspan=3><center><img alt=\"".LAN_315."\" src=project_graph.php?projectid=$project_id&amp;type=2 /></center></td></tr>\n";
+   $data .= "<tr><td class='nforumthread' colspan=3><center><img alt=\"".LAN_315."\" src=project_graph.php?projectid=$project_id&amp;type=7 /></center></td></tr>\n";
 
 
    $data .="</table>\n";
@@ -212,25 +220,25 @@ if(!function_exists("display_project_stats")) {
 
    $DATA = "<table style='width: 100%;' class='fborder'>
      <tr>
-     <th class='forumheader'>Project</th>
-     <th colspan=2 class='forumheader'>Total/Active Users</th>
-     <th colspan=2 class='forumheader'>Total/Active Hosts</th>
-     <th colspan=2 class='forumheader'>Total/Active Teams</th>
-     <th colspan=2 class='forumheader'>Countries</th>
-     <th colspan=2 class='forumheader'>Total Credit</th>
-     <th colspan=2 class='forumheader'><font size =-1>XML Data Time (CDT)</font></th>
+     <th class='forumheader'>".LAN_316."</th>
+     <th colspan=2 class='forumheader'>".LAN_317."</th>
+     <th colspan=2 class='forumheader'>".LAN_318."</th>
+     <th colspan=2 class='forumheader'>".LAN_319."</th>
+     <th colspan=1 class='forumheader'>".LAN_320."</th>
+     <th colspan=1 class='forumheader'>".LAN_321."</th>
+     <th colspan=2 class='forumheader'><font size =-1>".LAN_322."</font></th>
      </tr>";
   } else {
 
    $DATA = "<table style='width: 100%;' class='fborder'>
      <tr>
-     <th class='forumheader'>Project</th>
-     <th colspan=1 class='forumheader'>Total Users</th>
-     <th colspan=1 class='forumheader'>Total Hosts</th>
-     <th colspan=1 class='forumheader'>Total Teams</th>
-     <th colspan=1 class='forumheader'>Countries</th>
-     <th colspan=1 class='forumheader'>Total Credit</th>
-     <th colspan=1 class='forumheader'><font size =-1>XML Data Time (CDT)</font></th>
+     <th class='forumheader'>".LAN_316."</th>
+     <th colspan=1 class='forumheader'>".LAN_323."</th>
+     <th colspan=1 class='forumheader'>".LAN_324."</th>
+     <th colspan=1 class='forumheader'>".LAN_325."</th>
+     <th colspan=1 class='forumheader'>".LAN_320."</th>
+     <th colspan=1 class='forumheader'>".LAN_321."</th>
+     <th colspan=1 class='forumheader'><font size =-1>".LAN_322."</font></th>
      </tr>";
 
    }
@@ -372,15 +380,17 @@ if(!function_exists("display_project_stats")) {
          $DATA .= "<td align=right class='$bc'>$team_count</td>\n";
          if ($active > 0) $DATA .= "<td align=right class='$bc'><font size=-1 color=\"$ctc\">($stc$tc)</font></td>\n";
          if ($active > 0)
-         $DATA .= "<td rowspan=2 align=right class='$bc'>$country_count</td>\n";
+            $DATA .= "<td rowspan=1 align=right class='$bc'>$country_count</td>\n";
          else 
-         $DATA .= "<td align=right class='$bc'>$country_count</td>\n";
-         if ($active > 0) $DATA .= "<td rowspan=2 align=right class='$bc'><font size=-1 color=\"$ccc\">($scc$cc)</font></td>\n";
+            $DATA .= "<td align=right class='$bc'>$country_count</td>\n";
+         /*if ($active > 0) 
+            $DATA .= "<td rowspan=1 align=right class='$bc'><font size=-1 color=\"$ccc\">($scc$cc)</font></td>\n"; */
          if ($active > 0)
-            $DATA .= "<td rowspan=2 align=right class='$bc'>$total_credit</td>\n";
+            $DATA .= "<td rowspan=1 align=right class='$bc'>$total_credit</td>\n";
          else
             $DATA .= "<td align=right class='$bc'>$total_credit</td>\n";
-         if ($active > 0) $DATA .= "<td rowspan=2 align=right class='$bc'><font size=-1 color=\"$ctcc\">($stcc$tcc)</font></td>\n";
+         /*if ($active > 0) 
+              $DATA .= "<td rowspan=2 align=right class='$bc'><font size=-1 color=\"$ctcc\">($stcc$tcc)</font></td>\n"; */
          if ($active > 0) 
               $DATA .= "<td rowspan=2 align=right class='$bc'><font size=-1>$last_update</font></td>\n";
          else
@@ -394,6 +404,8 @@ if(!function_exists("display_project_stats")) {
          $DATA .= "<td align=right class='$bc'><font size=-1 color=\"$achc\">($ashc$ahc)</font></td>\n";
          $DATA .= "<td align=right class='$bc'>$ateam_count</td>\n";
          $DATA .= "<td align=right class='$bc'><font size=-1 color=\"$actc\">($astc$atc)</font></td>\n";
+         $DATA .= "<td align=right class='$bc'><font size=-2 color=\"$ccc\">($scc$cc)</font></td>\n";
+         $DATA .= "<td align=right class='$bc'><font size=-2 color=\"$ctcc\">($stcc$tcc)</font></td>\n";
       }
       $DATA .= "</tr>\n";
    }
@@ -412,75 +424,74 @@ if(!function_exists("display_rankings")) {
 
      $DATA = "<table style='width:100%' class='nforumholder' cellpadding='0' cellspacing='0'>
      <tr>
-         <th class='nforumcaption3' rowspan=3>Computer count</th>
-         <th class='nforumcaption3' style='text-align:center' colspan=6>Number of projects actively participating in</th>
+         <th class='nforumcaption3' rowspan=3>".LAN_326."</th>
+         <th class='nforumcaption3' style='text-align:center' colspan=6>".LAN_327."</th>
      </tr>
      <tr >
-         <th class='nforumcaption3' style='text-align:center' colspan=2>1 or more (all users)</th>
-         <th class='nforumcaption3' style='text-align:center' colspan=2>2 or more</th>
-         <th class='nforumcaption3' style='text-align:center' colspan=2>5 or more</th>
+         <th class='nforumcaption3' style='text-align:center' colspan=2>".LAN_328."</th>
+         <th class='nforumcaption3' style='text-align:center' colspan=2>".LAN_329."</th>
+         <th class='nforumcaption3' style='text-align:center' colspan=2>".LAN_330."</th>
      </tr>
      <tr class='nforumcaption2'>
-       <th class='nforumcaption3'>By Total Work Done</th><th class='nforumcaption3'>By Recent Work Done</th>
-       <th class='nforumcaption3'>By Total Work Done</th><th class='nforumcaption3'>By Recent Work Done</th>
-       <th class='nforumcaption3'>By Total Work Done</th><th class='nforumcaption3'>By Recent Work Done</th>
+       <th class='nforumcaption3'>".LAN_331."</th><th class='nforumcaption3'>".LAN_332."</th>
+       <th class='nforumcaption3'>".LAN_331."</th><th class='nforumcaption3'>".LAN_332."</th>
+       <th class='nforumcaption3'>".LAN_331."</th><th class='nforumcaption3'>".LAN_332."</th>
      </tr>
 
-     <tr><td class='nforumthread'>All Users</td>
-         <td class='nforumthread'><a href=\"u_rank.php?list=tc_p0c0\">View</a></td>
-         <td class='nforumthread'><a href=\"u_rank.php?list=rac_p0c0\">View</a></td>
+     <tr><td class='nforumthread'>".LAN_333."</td>
+         <td class='nforumthread'><a href=\"u_rank.php?list=tc_p0c0\">".LAN_334."</a></td>
+         <td class='nforumthread'><a href=\"u_rank.php?list=rac_p0c0\">".LAN_334."</a></td>
+         <td class='nforumthread'><a href=\"u_rank.php?list=tc_p2c0\">".LAN_334."</a></td>
+         <td class='nforumthread'><a href=\"u_rank.php?list=rac_p2c0\">".LAN_334."</a></td>
 
-         <td class='nforumthread'><a href=\"u_rank.php?list=tc_p2c0\">View</a></td>
-         <td class='nforumthread'><a href=\"u_rank.php?list=rac_p2c0\">View</a></td>
-
-         <td class='nforumthread'><a href=\"u_rank.php?list=tc_p5c0\">View</a></td>
-         <td class='nforumthread'><a href=\"u_rank.php?list=rac_p5c0\">View</a></td>
+         <td class='nforumthread'><a href=\"u_rank.php?list=tc_p5c0\">".LAN_334."</a></td>
+         <td class='nforumthread'><a href=\"u_rank.php?list=rac_p5c0\">".LAN_334."</a></td>
      </tr>
 
-     <tr><td class='nforumthread2'>Just 1 </td>
-         <td class='nforumthread2'><a href=\"u_rank.php?list=tc_p1c1\">View</a></td>
-         <td class='nforumthread2'><a href=\"u_rank.php?list=rac_p1c1\">View</a></td>
+     <tr><td class='nforumthread2'>".LAN_335."</td>
+         <td class='nforumthread2'><a href=\"u_rank.php?list=tc_p1c1\">".LAN_334."</a></td>
+         <td class='nforumthread2'><a href=\"u_rank.php?list=rac_p1c1\">".LAN_334."</a></td>
 
-         <td class='nforumthread2'><a href=\"u_rank.php?list=tc_p2c1\">View</a></td>
-         <td class='nforumthread2'><a href=\"u_rank.php?list=rac_p2c1\">View</a></td>
+         <td class='nforumthread2'><a href=\"u_rank.php?list=tc_p2c1\">".LAN_334."</a></td>
+         <td class='nforumthread2'><a href=\"u_rank.php?list=rac_p2c1\">".LAN_334."</a></td>
 
-         <td class='nforumthread2'><a href=\"u_rank.php?list=tc_p5c1\">View</a></td>
-         <td class='nforumthread2'><a href=\"u_rank.php?list=rac_p5c1\">View</a></td>
+         <td class='nforumthread2'><a href=\"u_rank.php?list=tc_p5c1\">".LAN_334."</a></td>
+         <td class='nforumthread2'><a href=\"u_rank.php?list=rac_p5c1\">".LAN_334."</a></td>
      </tr>
 
-     <tr><td class='nforumthread'>5 or fewer</td>
-         <td class='nforumthread'><a href=\"u_rank.php?list=tc_p1c5\">View</a></td>
-         <td class='nforumthread'><a href=\"u_rank.php?list=rac_p1c5\">View</a></td>
+     <tr><td class='nforumthread'>".LAN_336."</td>
+         <td class='nforumthread'><a href=\"u_rank.php?list=tc_p1c5\">".LAN_334."</a></td>
+         <td class='nforumthread'><a href=\"u_rank.php?list=rac_p1c5\">".LAN_334."</a></td>
 
-         <td class='nforumthread'><a href=\"u_rank.php?list=tc_p2c5\">View</a></td>
-         <td class='nforumthread'><a href=\"u_rank.php?list=rac_p2c5\">View</a></td>
+         <td class='nforumthread'><a href=\"u_rank.php?list=tc_p2c5\">".LAN_334."</a></td>
+         <td class='nforumthread'><a href=\"u_rank.php?list=rac_p2c5\">".LAN_334."</a></td>
 
-         <td class='nforumthread'><a href=\"u_rank.php?list=tc_p5c5\">View</a></td>
-         <td class='nforumthread'><a href=\"u_rank.php?list=rac_p5c5\">View</a></td>
-
-     </tr>
-
-     <tr><td class='nforumthread2'>10 or fewer</td>
-         <td class='nforumthread2'><a href=\"u_rank.php?list=tc_p1c10\">View</a></td>
-         <td class='nforumthread2'><a href=\"u_rank.php?list=rac_p1c10\">View</a></td>
-
-         <td class='nforumthread2'><a href=\"u_rank.php?list=tc_p2c10\">View</a></td>
-         <td class='nforumthread2'><a href=\"u_rank.php?list=rac_p2c10\">View</a></td>
-
-         <td class='nforumthread2'><a href=\"u_rank.php?list=tc_p5c10\">View</a></td>
-         <td class='nforumthread2'><a href=\"u_rank.php?list=rac_p5c10\">View</a></td>
+         <td class='nforumthread'><a href=\"u_rank.php?list=tc_p5c5\">".LAN_334."</a></td>
+         <td class='nforumthread'><a href=\"u_rank.php?list=rac_p5c5\">".LAN_334."</a></td>
 
      </tr>
 
-     <tr><td class='nforumthread'>20 or fewer</td>
-         <td class='nforumthread'><a href=\"u_rank.php?list=tc_p1c20\">View</a></td>
-         <td class='nforumthread'><a href=\"u_rank.php?list=rac_p1c20\">View</a></td>
+     <tr><td class='nforumthread2'>".LAN_337."</td>
+         <td class='nforumthread2'><a href=\"u_rank.php?list=tc_p1c10\">".LAN_334."</a></td>
+         <td class='nforumthread2'><a href=\"u_rank.php?list=rac_p1c10\">".LAN_334."</a></td>
 
-         <td class='nforumthread'><a href=\"u_rank.php?list=tc_p2c20\">View</a></td>
-         <td class='nforumthread'><a href=\"u_rank.php?list=rac_p2c20\">View</a></td>
+         <td class='nforumthread2'><a href=\"u_rank.php?list=tc_p2c10\">".LAN_334."</a></td>
+         <td class='nforumthread2'><a href=\"u_rank.php?list=rac_p2c10\">".LAN_334."</a></td>
 
-         <td class='nforumthread'><a href=\"u_rank.php?list=tc_p5c20\">View</a></td>
-         <td class='nforumthread'><a href=\"u_rank.php?list=rac_p5c20\">View</a></td>
+         <td class='nforumthread2'><a href=\"u_rank.php?list=tc_p5c10\">".LAN_334."</a></td>
+         <td class='nforumthread2'><a href=\"u_rank.php?list=rac_p5c10\">".LAN_334."</a></td>
+
+     </tr>
+
+     <tr><td class='nforumthread'>".LAN_338."</td>
+         <td class='nforumthread'><a href=\"u_rank.php?list=tc_p1c20\">".LAN_334."</a></td>
+         <td class='nforumthread'><a href=\"u_rank.php?list=rac_p1c20\">".LAN_334."</a></td>
+
+         <td class='nforumthread'><a href=\"u_rank.php?list=tc_p2c20\">".LAN_334."</a></td>
+         <td class='nforumthread'><a href=\"u_rank.php?list=rac_p2c20\">".LAN_334."</a></td>
+
+         <td class='nforumthread'><a href=\"u_rank.php?list=tc_p5c20\">".LAN_334."</a></td>
+         <td class='nforumthread'><a href=\"u_rank.php?list=rac_p5c20\">".LAN_334."</a></td>
      </tr>
 
      </table>";
@@ -553,7 +564,7 @@ function display_users($start,$end,$table)
     }
 
 
-   $data .= "</td><td align=center colspan=2><a href=u_rank.php>Select new list</a></td><td colspan=3 align=right>\r\n";
+   $data .= "</td><td align=center colspan=2><a href=u_rank.php>".LAN_339."</a></td><td colspan=3 align=right>\r\n";
 
    $ns = $start + 100;
    $data .= "<a href=u_rank.php?list=$table&start=$ns>&gt;&gt; 100</a>&nbsp;&nbsp ";
@@ -568,13 +579,13 @@ function display_users($start,$end,$table)
 
    $data .= "</td></tr>
    <tr>
-     <td class='forumheader2'>Rank</td>
-     <td class='forumheader2'>Name</td>
-     <td class='forumheader2'>Total Credit</td>
-     <td class='forumheader2'>Recent Average Credit</td>
-     <td class='forumheader2'>Country</td>
-     <td class='forumheader2'>Active Projects</td>
-     <td class='forumheader2'>Total Projects</td>
+     <td class='forumheader2'>".LAN_340."</td>
+     <td class='forumheader2'>".LAN_341."</td>
+     <td class='forumheader2'>".LAN_342."</td>
+     <td class='forumheader2'>".LAN_343."</td>
+     <td class='forumheader2'>".LAN_203."</td>
+     <td class='forumheader2'>".LAN_344."</td>
+     <td class='forumheader2'>".LAN_345."</td>
    </tr>";
 
 

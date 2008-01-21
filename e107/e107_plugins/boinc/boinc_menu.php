@@ -2,9 +2,10 @@
 if (!defined('e107_INIT')) { exit; }
 
 include("bp_functions.php");
+include_lan(e_PLUGIN.'boinc/languages/'.e_LANGUAGE.'/lan_boinc.php');
 
-$bp_title = "BOINC Project Statistics";
-$text = "Can't connect to DB";
+$bp_title = LAN_140;
+$text = LAN_141;
 
 
 if(defined("BULLET"))
@@ -27,7 +28,7 @@ $query = "select name,project_id from b_projects where shown='Y' and project_id 
 
 $res = mysql_query($query);
 if (!$res) {
-       $text = "DB Error";
+       $text = LAN_142;
 } else {
 
        $text = "$bullet <a href=\"".e_PLUGIN."boinc/bp.php?project=19\">BOINC Combined</a>";

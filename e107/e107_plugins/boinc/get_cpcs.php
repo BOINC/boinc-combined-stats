@@ -3,8 +3,7 @@
 require_once("../../class2.php");
 
 require_once("bp_functions.php");
-//@include_once(e_PLUGIN."bp/languages/".e_LANGUAGE.".php");
-//@include_once(e_PLUGIN."bp/languages/English.php");
+include_lan(e_PLUGIN.'boinc/languages/'.e_LANGUAGE.'/lan_boinc.php');
 
 
 mysql_select_db($db_db);
@@ -14,7 +13,7 @@ $query = "select distinct a.project_id1, b.name from b_cpcs a, b_projects b wher
 $res = mysql_query($query);
 
 if (!$res) {
-     echo "<b>Error performing query: " . mysql_error() . "</b>";
+     echo "<b>".LAN_232.": " . mysql_error() . "</b>";
      exit();
 }
 
@@ -44,7 +43,7 @@ if (!$res) {
    $res = mysql_query($query);
 
    if (!$res) {
-     echo "<b>Error performing query: " . mysql_error() . "</b>";
+     echo "<b>".LAN_232.": " . mysql_error() . "</b>";
      exit();
    }
 
@@ -102,19 +101,14 @@ if (!$res) {
 <div class='dcaption'>
 <div class='left'></div>
 <div class='right'></div>
-<div class='center'>Granted credit comparison</div>
+<div class='center'><?php echo LAN_260;?></div>
 </div>
 <div class='dbody'>
 <div class='leftwrapper'>
 <div class='rightwrapper'>
 <div class='leftcontent'></div>
 <div class='rightcontent'></div>
-<div class='dcenter'><div class='dinner'>
-This chart shows the ratio of credit granted per cpu second for hosts actively participating in any two given projects.
-If a value in Row A and Column B is greater than 1, that
-indicates that project A is awarding more credit per cpu
-second than project B.  The number in () indicates the
-number of active hosts participating in both project A and B.
+<div class='dcenter'><div class='dinner'><?php echo LAN_261;?>
 <br /></div></div>
 </div>
 </div>
@@ -128,7 +122,7 @@ number of active hosts participating in both project A and B.
 <?php
 
 
-   $ns->tablerender("Project granted credit comparison", $data);
+   $ns->tablerender(LAN_262, $data);
    require_once(FOOTERF);
 
 ?>

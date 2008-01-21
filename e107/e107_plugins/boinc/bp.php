@@ -4,13 +4,12 @@
 require_once("../../class2.php");
 
 require_once("bp_functions.php");
-//@include_once(e_PLUGIN."bp/languages/".e_LANGUAGE.".php");
-//@include_once(e_PLUGIN."bp/languages/English.php");
+include_lan(e_PLUGIN.'boinc/languages/'.e_LANGUAGE.'/lan_boinc.php');
 
 $project_id = $_GET["project"];
 
 $bp_title = get_project_name($project_id);
-$bp_title .= " Statistics";
+$bp_title .= LAN_150;
  
 $mytext = get_project_info($project_id);
 

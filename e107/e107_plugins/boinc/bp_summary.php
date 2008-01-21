@@ -4,12 +4,11 @@
 require_once("../../class2.php");
 
 require_once("bp_functions.php");
-//@include_once(e_PLUGIN."bp/languages/".e_LANGUAGE.".php");
-//@include_once(e_PLUGIN."bp/languages/English.php");
+include_lan(e_PLUGIN.'boinc/languages/'.e_LANGUAGE.'/lan_boinc.php');
 
 require_once(HEADERF);
 
-$bp_title = "Summary of projects";
+$bp_title = LAN_130;
  
 $text = display_project_stats(1);
 

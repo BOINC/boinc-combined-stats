@@ -3,8 +3,7 @@
 require_once("../../class2.php");
 
 require_once("bp_functions.php");
-//@include_once(e_PLUGIN."bp/languages/".e_LANGUAGE.".php");
-//@include_once(e_PLUGIN."bp/languages/English.php");
+include_lan(e_PLUGIN.'boinc/languages/'.e_LANGUAGE.'/lan_boinc.php');
 
    // Kick out the display to e107 engine
    require_once(HEADERF);
@@ -13,7 +12,7 @@ require_once("bp_functions.php");
 <div class='dcaption'>
 <div class='left'></div>
 <div class='right'></div>
-<div class='center'>World BOINC Activity</div>
+<div class='center'><?php echo LAN_100; ?></div>
 </div>
 <div class='dbody'>
 <div class='leftwrapper'>
@@ -21,9 +20,7 @@ require_once("bp_functions.php");
 <div class='leftcontent'></div>
 <div class='rightcontent'></div>
 <div class='dcenter'><div class='dinner'>
-This map shows the current global BOINC activity in GigaFLOPS. The number shown when you mouse over a country is the current GigaFLOPS produced by BOINC participents of that country.
-You can zoom in on the map by holding down the left mouse button and draging the mouse over the area you wish to zoom in to.
-
+<?php echo LAN_101; ?>
 <br />
 <br />
 <center>
@@ -36,33 +33,33 @@ width="650" height="400" id="zoom_map" align="top">
 </center>
 
 <br />
-<b>Key:</b>
+<b><?php echo LAN_102;?></b>
 <p/>
-<p>Values are in GigaFLOPS
+<p/><?php echo LAN_103;?>
 <br/>
-<span style="background-color:#000000; border: solid #666666 1px;">&nbsp;&nbsp;&nbsp;</span>No data
+<span style="background-color:#000000; border: solid #666666 1px;">&nbsp;&nbsp;&nbsp;</span><?php echo LAN_104;?>
 <br/>
-<span style="background-color:#ffffff; border: solid #666666 1px;">&nbsp;&nbsp;&nbsp;</span>&lt; 1 
+<span style="background-color:#ffffff; border: solid #666666 1px;">&nbsp;&nbsp;&nbsp;</span>&lt; <?php echo LAN_105;?> 
 <br/>
-<span style="background-color:#f600c5; border: solid #666666 1px;">&nbsp;&nbsp;&nbsp;</span>1 - 50
+<span style="background-color:#f600c5; border: solid #666666 1px;">&nbsp;&nbsp;&nbsp;</span><?php echo LAN_106;?>
 <br/>
-<span style="background-color:#c302d4; border: solid #666666 1px;">&nbsp;&nbsp;&nbsp;</span>51 - 100
+<span style="background-color:#c302d4; border: solid #666666 1px;">&nbsp;&nbsp;&nbsp;</span><?php echo LAN_107;?>
 <br/>
-<span style="background-color:#0905a7; border: solid #666666 1px;">&nbsp;&nbsp;&nbsp;</span>101 - 500 
+<span style="background-color:#0905a7; border: solid #666666 1px;">&nbsp;&nbsp;&nbsp;</span><?php echo LAN_108;?>
 <br/>
-<span style="background-color:#2afef2; border: solid #666666 1px;">&nbsp;&nbsp;&nbsp;</span>501 - 1,000 
+<span style="background-color:#2afef2; border: solid #666666 1px;">&nbsp;&nbsp;&nbsp;</span><?php echo LAN_109;?>
 <br/>
-<span style="background-color:#02d4b4; border: solid #666666 1px;">&nbsp;&nbsp;&nbsp;</span>1,001 - 5,000
+<span style="background-color:#02d4b4; border: solid #666666 1px;">&nbsp;&nbsp;&nbsp;</span><?php echo LAN_110;?>
 <br/>
-<span style="background-color:#61cc02; border: solid #666666 1px;">&nbsp;&nbsp;&nbsp;</span>5,001 - 10,000
+<span style="background-color:#61cc02; border: solid #666666 1px;">&nbsp;&nbsp;&nbsp;</span><?php echo LAN_111;?>
 <br/>
-<span style="background-color:#c4ee00; border: solid #666666 1px;">&nbsp;&nbsp;&nbsp;</span>10,001 - 20,000
+<span style="background-color:#c4ee00; border: solid #666666 1px;">&nbsp;&nbsp;&nbsp;</span><?php echo LAN_112;?>
 <br/>
-<span style="background-color:#ffe721; border: solid #666666 1px;">&nbsp;&nbsp;&nbsp;</span>20,001 - 50,000
+<span style="background-color:#ffe721; border: solid #666666 1px;">&nbsp;&nbsp;&nbsp;</span><?php echo LAN_113;?>
 <br/>
-<span style="background-color:#fd9b3b; border: solid #666666 1px;">&nbsp;&nbsp;&nbsp;</span>50,001 - 100,000
+<span style="background-color:#fd9b3b; border: solid #666666 1px;">&nbsp;&nbsp;&nbsp;</span><?php echo LAN_114;?>
 <br/>
-<span style="background-color:#ff1509; border: solid #666666 1px;">&nbsp;&nbsp;&nbsp;</span>100,001+ 
+<span style="background-color:#ff1509; border: solid #666666 1px;">&nbsp;&nbsp;&nbsp;</span><?php echo LAN_115;?>
 </p>
 
 </div></div>
@@ -77,9 +74,5 @@ width="650" height="400" id="zoom_map" align="top">
 </div>
 
 <?php
-
-
-   //$ns->tablerender("Project granted credit comparison", $data);
    require_once(FOOTERF);
-
 ?>

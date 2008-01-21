@@ -3,6 +3,7 @@ Header("Content-Type: image/png");
 require('./jpgraph/jpgraph.php');
 require('./jpgraph/jpgraph_line.php');
 include("bp_functions.php");
+//include_lan(e_PLUGIN.'boinc/languages/'.e_LANGUAGE.'/lan_boinc.php');
 
 $project = $_GET["projectid"];
 if (defined($_GET["type"])) $type = $_GET["type"];

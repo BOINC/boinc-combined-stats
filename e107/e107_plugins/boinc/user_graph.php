@@ -64,7 +64,7 @@ function do_tc_graph($cpid,$type,$proj) {
    $graph->SetShadow();
    $graph->SetMarginColor('white');
    $graph->img->SetMargin(60,200,20,50);
-   $graph->footer->left->set ("(C) 2007 http://boinc.netsoft-online.com/");
+   $graph->footer->left->set ("(C) 2008 http://boinc.netsoft-online.com/");
 
 
    $project_name="";
@@ -239,7 +239,7 @@ function do_pie_graph($cpid,$type) {
    // add a drop shadow
    $graph->SetShadow();
    //$graph->SetFrame(false);
-   $graph->footer->left->set ("(C) 2007 http://boinc.netsoft-online.com/");
+   $graph->footer->left->set ("(C) 2008 http://boinc.netsoft-online.com/");
    
    $p1 = new PiePlot($counts);
    $p1->SetLegends($names);

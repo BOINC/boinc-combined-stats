@@ -1,6 +1,7 @@
 <?php
 require_once("../../class2.php");
 require_once("bp_functions.php");
+include_lan(e_PLUGIN.'boinc/languages/'.e_LANGUAGE.'/lan_boinc.php');
 
 $list = $_GET['list'];
 $start = $_GET['start'];
@@ -19,29 +20,66 @@ require_once(HEADERF);
   else 
   {
      if ($list == "rac_p0c0") 
-        $tname = "Users currently doing the most work";
+        $tname = LAN_160;
      if ($list == "tc_p0c0")
-        $tname = "Users who have done the most work";
+        $tname = LAN_161;
      if ($list == "tc_p1c1")
-        $tname = "Users who have done the most work on a single computer";
+        $tname = LAN_162;
      if ($list == "rac_p1c1")
-        $tname = "Users who are currently doing the most work on a single computer";
+        $tname = LAN_163;
      if ($list == "tc_p1c5")
-        $tname = "Users who have done the most work on a 5 or fewer computers";
+        $tname = LAN_164;
      if ($list == "rac_p1c5")
-        $tname = "Users who are currently doing the most work on 5 or fewer computers";
+        $tname = LAN_165;
      if ($list == "tc_p1c10")
-        $tname = "Users who have done the most work on a 10 or fewer computers";
+        $tname = LAN_166;
      if ($list == "rac_p1c10")
-        $tname = "Users who are currently doing the most work on 10 or fewer computers";
+        $tname = LAN_167;
      if ($list == "tc_p1c20")
-        $tname = "Users who have done the most work on 20 or fewer computers";
+        $tname = LAN_168;
      if ($list == "rac_p1c20")
-        $tname = "Users who are currently doing the most work on 20 or fewer computers";
+        $tname = LAN_169;
      if ($list == "tc_p2c0")
-        $tname = "Users who have done the most work and actively participating in 2 or more projects";
+        $tname = LAN_170;
      if ($list == "rac_p2c0")
-        $tname = "Users who are currently doing the most work and are actively participating in 2 or more projects";
+        $tname = LAN_171;
+     if ($list == "tc_p2c1")
+        $tname = LAN_172;
+     if ($list == "tc_p2c5")
+        $tname = LAN_173;
+     if ($list == "tc_p2c10")
+        $tname = LAN_174;
+     if ($list == "tc_p2c20")
+        $tname = LAN_175;
+     if ($list == "tc_p5c0")
+        $tname = LAN_176;
+     if ($list == "tc_p5c1")
+        $tname = LAN_177;
+     if ($list == "tc_p5c5")
+        $tname = LAN_178;
+     if ($list == "tc_p5c10")
+        $tname = LAN_179;
+     if ($list == "tc_p5c20")
+        $tname = LAN_180;
+     if ($list == "rac_p2c1")
+        $tname = LAN_181;
+     if ($list == "rac_p2c5")
+        $tname = LAN_182;
+     if ($list == "rac_p2c10")
+        $tname = LAN_183;
+     if ($list == "rac_p2c20")
+        $tname = LAN_184;
+     if ($list == "rac_p5c0")
+        $tname = LAN_185;
+     if ($list == "rac_p5c1")
+        $tname = LAN_186;
+     if ($list == "rac_p5c5")
+        $tname = LAN_187;
+     if ($list == "rac_p5c10")
+        $tname = LAN_188;
+     if ($list == "rac_p5c20")
+        $tname = LAN_189;
+
 
      $data = display_users($start,$start+$count,$list);
   }
