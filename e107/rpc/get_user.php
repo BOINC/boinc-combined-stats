@@ -223,6 +223,7 @@ if ($connect != 0)
       {
          print "      <project>\n";
          print "         <name>$pname</name>\n";
+         print "         <project_id>$project_id</project_id>\n";
          print "         <url>$purl</url>\n";
          print "         <total_credit>$ptotal_credit</total_credit>\n";
          print "         <expavg_credit>$pexpavg_credit</expavg_credit>\n";
