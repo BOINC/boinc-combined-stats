@@ -2737,16 +2737,18 @@ public void DoCombinedStatsProjectUpdates (int tc_day, int rac_day, int week) th
     
     public void ExportUserTable(String exportFile) throws SQLException {
         
-        String query = "select b_cpid.user_cpid, b_cpid.total_credit, b_cpid.rac, b_cpid.rac_time, b_cpid.computer_count, b_users.name,b_users.user_id, "+
-            "b_country.country,b_users.create_time,b_users.url,b_teams.name as team_name, b_users.total_credit as ptc, b_users.rac as prac, "+
+        String psquery = "select b_cpid.user_cpid, b_cpid.total_credit, b_cpid.rac, b_cpid.rac_time, b_cpid.computer_count, b_users.name,b_users.user_id, "+
+            "b_country.country,b_users.create_time,b_users.url,b_users.teamid,b_teams.name as team_name, b_users.total_credit as ptc, b_users.rac as prac, "+
             "b_users.rac_time as prt, b_projects.name as pname, b_projects.url as purl, b_users.computer_count as pcc, b_rank_user_tc_p0c0.rank as wr "+
             "from b_cpid join (b_users, b_projects, b_rank_user_tc_p0c0) "+
             "on (b_cpid.table_id=b_users.b_cpid_id and b_users.project_id=b_projects.project_id and b_rank_user_tc_p0c0.b_cpid_id=b_cpid.table_id) "+
             "left join (b_country) on (b_users.country_id=b_country.country_id) "+
             "left join (b_teams) on (b_users.b_team_id=b_teams.table_id) "+
-            "where b_cpid.project_count > 0 and b_cpid.total_credit > 0 "+
-            "order by b_cpid.rac desc,b_cpid.table_id";
+            "where b_cpid.user_cpid=? and b_cpid.project_count > 0 and b_cpid.total_credit > 0 ";//+
+            //"order by b_cpid.rac desc,b_cpid.table_id";
 
+        PreparedStatement ps = null;
+        String query = "select b_cpid.user_cpid from b_cpid order by b_cpid.rac desc";
         
         String countQuery = "select count(*)as cnt, sum(total_credit) as tc, sum(rac) as rt from b_cpid where project_count > 0 and total_credit > 0";
         
@@ -2760,7 +2762,8 @@ public void DoCombinedStatsProjectUpdates (int tc_day, int rac_day, int week) th
         // get the totals
         try {            
             statement = cDBConnection.createStatement(java.sql.ResultSet.TYPE_FORWARD_ONLY,java.sql.ResultSet.CONCUR_READ_ONLY);
-            statement.setFetchSize(Integer.MIN_VALUE);
+            //statement.setFetchSize(Integer.MIN_VALUE);
+            statement.setFetchSize(100);
 
             resultSet = statement.executeQuery( countQuery );
 
@@ -2784,6 +2787,7 @@ public void DoCombinedStatsProjectUpdates (int tc_day, int rac_day, int week) th
             throw new SQLException("ExportUserTable() - " + s.toString());
         }     
         
+        log.info("Expecting "+totalUsers);
         int count=0;
         // now open the file
         try {
@@ -2809,72 +2813,80 @@ public void DoCombinedStatsProjectUpdates (int tc_day, int rac_day, int week) th
                 
                 String lastCpid="";
                 
+                ps = cDBConnection.prepareStatement(psquery);
                 while( resultSet.next() )
                 {
-                    
                     String user_cpid =  resultSet.getString("user_cpid");
-                    totalCredit = resultSet.getInt("total_credit");
-                    totalRac = resultSet.getInt("rac");
-                    int rac_time = resultSet.getInt("rac_time");
-                    int computer_count = resultSet.getInt("computer_count");
-                    String user_name = resultSet.getString("name");
-                    int user_id = resultSet.getInt("user_id");
-                    String country = resultSet.getString("country");
-                    int create_time = resultSet.getInt("create_time");
-                    String url = resultSet.getString("url");
-                    String team_name = resultSet.getString("team_name");
-                    int ptc = resultSet.getInt("ptc");
-                    int prac = resultSet.getInt("prac");
-                    int prt = resultSet.getInt("prt");
-                    String pname = resultSet.getString("pname");
-                    String purl = resultSet.getString("purl");
-                    int pcc = resultSet.getInt("pcc");
-                    int world_rank = resultSet.getInt("wr");
                     
-                    if (lastCpid.compareToIgnoreCase(user_cpid)!= 0) {
+                    ps.setString(1, user_cpid);
+                    
+                    ResultSet rs2 = ps.executeQuery();
+                    while (rs2.next()) {
+                        user_cpid =  rs2.getString("user_cpid");
+                        totalCredit = rs2.getInt("total_credit");
+                        totalRac = rs2.getInt("rac");
+                        int rac_time = rs2.getInt("rac_time");
+                        int computer_count = rs2.getInt("computer_count");
+                        String user_name = rs2.getString("name");
+                        int user_id = rs2.getInt("user_id");
+                        String country = rs2.getString("country");
+                        int create_time = rs2.getInt("create_time");
+                        String url = rs2.getString("url");
+                        int teamid = rs2.getInt("teamid");
+                        String team_name = rs2.getString("team_name");
+                        int ptc = rs2.getInt("ptc");
+                        int prac = rs2.getInt("prac");
+                        int prt = rs2.getInt("prt");
+                        String pname = rs2.getString("pname");
+                        String purl = rs2.getString("purl");
+                        int pcc = rs2.getInt("pcc");
+                        int world_rank = rs2.getInt("wr");
                         
-                        // starting a new entry
-                        if (count > 0) temp = "  </user>\n";
-                        count++;
-                        temp += "  <user>\n"+
-                               "     <total_credit>"+totalCredit+"</total_credit>\n"+
-                               "     <expavg_credit>"+totalRac+"</expavg_credit>\n"+
-                               "     <expavg_time>"+rac_time+"</expavg_time>\n"+
-                               "     <world_rank>"+world_rank+"</world_rank>\n"+
-                               "     <name>"+user_name+"</name>\n"+
-                               "     <user_cpid>"+user_cpid+"</user_cpid>\n"+
-                               "     <computer_count>"+computer_count+"</computer_count>\n";
+                        if (lastCpid.compareToIgnoreCase(user_cpid)!= 0) {
+                            
+                            // starting a new entry
+                            if (count > 0) temp = "  </user>\n";
+                            count++;
+                            temp += "  <user>\n"+
+                                   "     <total_credit>"+totalCredit+"</total_credit>\n"+
+                                   "     <expavg_credit>"+totalRac+"</expavg_credit>\n"+
+                                   "     <expavg_time>"+rac_time+"</expavg_time>\n"+
+                                   "     <world_rank>"+world_rank+"</world_rank>\n"+
+                                   "     <name>"+user_name+"</name>\n"+
+                                   "     <user_cpid>"+user_cpid+"</user_cpid>\n"+
+                                   "     <computer_count>"+computer_count+"</computer_count>\n";
+                            out.write(temp.getBytes());
+                        }          
+                        
+                        temp =     "     <project>\n"+
+                                   "         <name>"+pname+"</name>\n";
+                        if (purl != null && purl.length() > 0) 
+                            temp +="         <url>"+purl+"</url>\n";
+                        
+                        temp +=    "         <id>"+user_id+"</id>\n"+
+                                   "         <user_name>"+user_name+"</user_name>\n"+
+                                   "         <create_time>"+create_time+"</create_time>\n"+
+                                   "         <total_credit>"+ptc+"</total_credit>\n"+
+                                   "         <expavg_credit>"+prac+"</expavg_credit>\n"+
+                                   "         <expavg_time>"+prt+"</expavg_time>\n";
+                        if (country != null && country.length() > 0) {
+                            temp +="         <country>"+country+"</country>\n";
+                        }
+                        if (url != null && url.length() > 0)
+                            temp +="         <user_url>http://"+url+"</user_url>\n";
+                        if (team_name != null && team_name.length() > 0) {
+                            temp +="         <team_id>"+teamid+"</team_id>\n"+
+                                   "         <team_name>"+team_name+"</team_name>\n";
+                                   
+                        }
+                        temp +=    "         <computer_count>"+pcc+"</computer_count>\n"+
+                                   "     </project>\n";
+                        
                         out.write(temp.getBytes());
-                    }          
-                    
-                    temp =     "     <project>\n"+
-                               "         <name>"+pname+"</name>\n";
-                    if (purl != null && purl.length() > 0) 
-                        temp +="         <url>"+purl+"</url>\n";
-                    
-                    temp +=    "         <id>"+user_id+"</id>\n"+
-                               "         <user_name>"+user_name+"</user_name>\n"+
-                               "         <create_time>"+create_time+"</create_time>\n"+
-                               "         <total_credit>"+ptc+"</total_credit>\n"+
-                               "         <expavg_credit>"+prac+"</expavg_credit>\n"+
-                               "         <expavg_time>"+prt+"</expavg_time>\n";
-                    if (country != null && country.length() > 0) {
-                        temp +="         <country>"+"</country>\n";
+                        
+                        lastCpid = user_cpid;
                     }
-                    if (url != null && url.length() > 0)
-                        temp +="         <user_url>http://"+url+"</user_url>\n";
-                    if (team_name != null && team_name.length() > 0) {
-                        temp +="         <team_id>"+"</team_id>\n"+
-                               "         <team_name>"+"</team_name>\n";
-                               
-                    }
-                    temp +=    "         <computer_count>"+pcc+"</computer_count>\n"+
-                               "     </project>\n";
-                    
-                    out.write(temp.getBytes());
-                    
-                    lastCpid = user_cpid;
-
+                    rs2.close();
                 }  
                 resultSet.close();
                 statement.close();
@@ -2899,7 +2911,7 @@ public void DoCombinedStatsProjectUpdates (int tc_day, int rac_day, int week) th
         
         log.info("Wrote "+count+" entries");
     }
-    
+        
     public void ExportHostTable(String exportFile) throws SQLException {
         
         String query = "select b_cpid.user_cpid, b_cpid.total_credit, b_cpid.rac, b_cpid.rac_time, b_cpid.computer_count, b_users.name,b_users.user_id, "+
