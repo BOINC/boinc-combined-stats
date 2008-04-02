@@ -2,6 +2,23 @@
 $cpid = $_GET["cpid"];
 $html = isset($_GET["html"]) ? $_GET["html"] : '';
 
+function escape_xml_special_chars ($text)
+{
+	// first unescape them in the case where they may 
+	// already be escaped - don't want to do it twice
+        $text = str_replace("&lt;", "<", $text);
+        $text = str_replace("&gt;", ">", $text);
+        $text = str_replace("&apos;", "\'", $text); 
+	$text = str_replace("&amp;", "&", $text);
+
+	// then escape them
+	$text = str_replace("&", "&amp;", $text);
+        $text = str_replace("<", "&lt;", $text);
+        $text = str_replace(">", "&gt;", $text);
+        $text = str_replace("\'", "&apos;", $text); 
+        return $text;
+}
+
 $rc = 0;
 
 if ($cpid=="")
@@ -126,6 +143,7 @@ if ($connect != 0)
             print "  <expavg_credit>$expavg_credit</expavg_credit>\n";
             print "  <expavg_time>$expavg_time</expavg_time>\n";
             print "  <cpid>$user_cpid</cpid>\n";
+	    $name = escape_xml_special_chars($name);
             print "  <name>$name</name>\n";
             if ($wr_t <> 0)
             {
@@ -222,6 +240,7 @@ if ($connect != 0)
       if ($html=="") 
       {
          print "      <project>\n";
+	 $pname = escape_xml_special_chars($pname);
          print "         <name>$pname</name>\n";
          print "         <project_id>$project_id</project_id>\n";
          print "         <url>$purl</url>\n";
@@ -238,6 +257,7 @@ if ($connect != 0)
          }
          if ($teamid > 0) {
             print "         <team_id>$teamid</team_id>\n";
+	    $tname = escape_xml_special_chars($tname);
             print "         <team_name>$tname</team_name>\n";
          }
          if ($count > 0) {
