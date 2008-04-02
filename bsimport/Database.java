@@ -2735,6 +2735,22 @@ public void DoCombinedStatsProjectUpdates (int tc_day, int rac_day, int week) th
         }        
     }    
     
+    public String EscapeXMLChars(String text) {
+    	String test = text;
+    	    	
+    	test = test.replaceAll("&lt;","<");
+    	test = test.replaceAll("&gt;",">");
+    	test = test.replaceAll("&apos;","'");
+    	test = test.replaceAll("&amp;", "&");
+    	
+    	test = test.replaceAll("&", "&amp;");
+    	test = test.replaceAll("<","&lt;");
+    	test = test.replaceAll(">", "&gt;");
+    	test = test.replaceAll("'", "&apos;");
+
+    	return test;    	
+    }
+    
     public void ExportUserTable(String exportFile) throws SQLException {
         
         String psquery = "select b_cpid.user_cpid, b_cpid.total_credit, b_cpid.rac, b_cpid.rac_time, b_cpid.computer_count, b_users.name,b_users.user_id, "+
@@ -2859,24 +2875,24 @@ public void DoCombinedStatsProjectUpdates (int tc_day, int rac_day, int week) th
                         }          
                         
                         temp =     "     <project>\n"+
-                                   "         <name>"+pname+"</name>\n";
+                                   "         <name>"+EscapeXMLChars(pname)+"</name>\n";
                         if (purl != null && purl.length() > 0) 
                             temp +="         <url>"+purl+"</url>\n";
                         
                         temp +=    "         <id>"+user_id+"</id>\n"+
-                                   "         <user_name>"+user_name+"</user_name>\n"+
+                                   "         <user_name>"+EscapeXMLChars(user_name)+"</user_name>\n"+
                                    "         <create_time>"+create_time+"</create_time>\n"+
                                    "         <total_credit>"+ptc+"</total_credit>\n"+
                                    "         <expavg_credit>"+prac+"</expavg_credit>\n"+
                                    "         <expavg_time>"+prt+"</expavg_time>\n";
                         if (country != null && country.length() > 0) {
-                            temp +="         <country>"+country+"</country>\n";
+                            temp +="         <country>"+EscapeXMLChars(country)+"</country>\n";
                         }
                         if (url != null && url.length() > 0)
                             temp +="         <user_url>http://"+url+"</user_url>\n";
                         if (team_name != null && team_name.length() > 0) {
                             temp +="         <team_id>"+teamid+"</team_id>\n"+
-                                   "         <team_name>"+team_name+"</team_name>\n";
+                                   "         <team_name>"+EscapeXMLChars(team_name)+"</team_name>\n";
                                    
                         }
                         temp +=    "         <computer_count>"+pcc+"</computer_count>\n"+
@@ -2891,6 +2907,7 @@ public void DoCombinedStatsProjectUpdates (int tc_day, int rac_day, int week) th
                 resultSet.close();
                 statement.close();
             } catch (SQLException s) {
+            	s.printStackTrace();
                 if (statement != null) {
                     statement.close();
                     statement = null;
@@ -3025,24 +3042,24 @@ public void DoCombinedStatsProjectUpdates (int tc_day, int rac_day, int week) th
                     }          
                     
                     temp =     "     <project>\n"+
-                               "         <name>"+pname+"</name>\n";
+                               "         <name>"+EscapeXMLChars(pname)+"</name>\n";
                     if (purl != null && purl.length() > 0) 
                         temp +="         <url>"+purl+"</url>\n";
                     
                     temp +=    "         <id>"+user_id+"</id>\n"+
-                               "         <user_name>"+user_name+"</user_name>\n"+
+                               "         <user_name>"+EscapeXMLChars(user_name)+"</user_name>\n"+
                                "         <create_time>"+create_time+"</create_time>\n"+
                                "         <total_credit>"+ptc+"</total_credit>\n"+
                                "         <expavg_credit>"+prac+"</expavg_credit>\n"+
                                "         <expavg_time>"+prt+"</expavg_time>\n";
                     if (country != null && country.length() > 0) {
-                        temp +="         <country>"+"</country>\n";
+                        temp +="         <country>"+EscapeXMLChars(country)+"</country>\n";
                     }
                     if (url != null && url.length() > 0)
                         temp +="         <user_url>http://"+url+"</user_url>\n";
                     if (team_name != null && team_name.length() > 0) {
                         temp +="         <team_id>"+"</team_id>\n"+
-                               "         <team_name>"+"</team_name>\n";
+                               "         <team_name>"+EscapeXMLChars(team_name)+"</team_name>\n";
                                
                     }
                     temp +=    "         <computer_count>"+pcc+"</computer_count>\n"+
@@ -3182,31 +3199,31 @@ public void DoCombinedStatsProjectUpdates (int tc_day, int rac_day, int week) th
                                "     <expavg_credit>"+totalRac+"</expavg_credit>\n"+
                                "     <expavg_time>"+rac_time+"</expavg_time>\n"+
                                "     <world_rank>"+world_rank+"</world_rank>\n"+
-                               "     <name>"+user_name+"</name>\n"+
+                               "     <name>"+EscapeXMLChars(user_name)+"</name>\n"+
                                "     <user_cpid>"+user_cpid+"</user_cpid>\n"+
                                "     <computer_count>"+computer_count+"</computer_count>\n";
                         out.write(temp.getBytes());
                     }          
                     
                     temp =     "     <project>\n"+
-                               "         <name>"+pname+"</name>\n";
+                               "         <name>"+EscapeXMLChars(pname)+"</name>\n";
                     if (purl != null && purl.length() > 0) 
                         temp +="         <url>"+purl+"</url>\n";
                     
                     temp +=    "         <id>"+user_id+"</id>\n"+
-                               "         <user_name>"+user_name+"</user_name>\n"+
+                               "         <user_name>"+EscapeXMLChars(user_name)+"</user_name>\n"+
                                "         <create_time>"+create_time+"</create_time>\n"+
                                "         <total_credit>"+ptc+"</total_credit>\n"+
                                "         <expavg_credit>"+prac+"</expavg_credit>\n"+
                                "         <expavg_time>"+prt+"</expavg_time>\n";
                     if (country != null && country.length() > 0) {
-                        temp +="         <country>"+"</country>\n";
+                        temp +="         <country>"+EscapeXMLChars(country)+"</country>\n";
                     }
                     if (url != null && url.length() > 0)
                         temp +="         <user_url>http://"+url+"</user_url>\n";
                     if (team_name != null && team_name.length() > 0) {
                         temp +="         <team_id>"+"</team_id>\n"+
-                               "         <team_name>"+"</team_name>\n";
+                               "         <team_name>"+EscapeXMLChars(team_name)+"</team_name>\n";
                                
                     }
                     temp +=    "         <computer_count>"+pcc+"</computer_count>\n"+
