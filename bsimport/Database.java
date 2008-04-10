@@ -1969,26 +1969,23 @@ public class Database {
             resultSet.close();
             statement.close();            
     
+            // zero out hidden projects
+            query = "select project_id from b_projects where shown='N'";
+            statement = cDBConnection.createStatement();
+            resultSet = statement.executeQuery( query );
             
-            //for (int i=1;i<=pmax;i++) {
-            //    for (int j=1;j<=pmax;j++)
-            //        System.out.print("["+counts[i][j]+"]");
-            //    System.out.println("");
-            //}
+            if ( resultSet == null ) 
+                throw new SQLException();
+           
             
-            //for (int i=1;i<=pmax;i++) {
-            //    for (int j=1;j<=pmax;j++) {
-            //        double v1,v2;
-            //        if (counts[i][j] > 0) {
-            //            v1 = sum1[i][j] / (double)counts[i][j];
-            //            v2 = sum2[i][j] / (double)counts[i][j];
-            //            double res = (v1/v2);
-            //            System.out.print("["+res+"]");
-            //        } else
-            //        System.out.print("[x]");
-            //    }
-            //    System.out.println("");
-            //}
+            while( resultSet.next() ) {                
+                int project_id = resultSet.getInt("project_id");
+                for (int i=0; i<=pmax;i++)
+                {
+                    counts[project_id][i] = 0;
+                    counts [i][project_id] = 0;
+                }
+            }
             
             // truncate table b_cpcs
             query = "truncate table b_cpcs";
@@ -2738,6 +2735,7 @@ public void DoCombinedStatsProjectUpdates (int tc_day, int rac_day, int week) th
     public String EscapeXMLChars(String text) {
     	String test = text;
     	    	
+    	test = test.replaceAll("&quot;", "\"");
     	test = test.replaceAll("&lt;","<");
     	test = test.replaceAll("&gt;",">");
     	test = test.replaceAll("&apos;","'");
@@ -2747,7 +2745,7 @@ public void DoCombinedStatsProjectUpdates (int tc_day, int rac_day, int week) th
     	test = test.replaceAll("<","&lt;");
     	test = test.replaceAll(">", "&gt;");
     	test = test.replaceAll("'", "&apos;");
-
+    	test = test.replaceAll("\"", "&quot;");
     	return test;    	
     }
     
