@@ -285,7 +285,7 @@ public class bsimport {
                                 // --remove entries that don't exist
                                 if (updateTeamCount > 0) {
                                     int deleted = 0;
-                                    Iterator it = hTeams.keySet().iterator();
+                                    Iterator<String> it = hTeams.keySet().iterator();
                                     while (it.hasNext()) {
                                         String t = (String)it.next();
                                         Team tt = (Team)hTeams.get(t);
@@ -336,7 +336,7 @@ public class bsimport {
                                     // they were processed
                                     if (updateHostCount > 0) {
                                         int deleted=0;
-                                        Iterator it = hHosts.keySet().iterator();
+                                        Iterator<String> it = hHosts.keySet().iterator();
                                         while (it.hasNext()) {
                                             String hk = (String) it.next();
                                             Host hh = (Host)hHosts.get(hk);

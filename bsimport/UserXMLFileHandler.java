@@ -34,7 +34,7 @@ public class UserXMLFileHandler extends DefaultHandler {
   private Hashtable<String, Integer> countryHashTable=null;
   private Hashtable<String, CPID> cpidHashTable=null;
   private Hashtable<String, CPIDChange> cpidChangesHashTable=null;
-  private Hashtable teamHashTable=null;
+  private Hashtable<String, Team> teamHashTable=null;
   private Database myDB=null;
   private String parseDataValue=null;
   private int project_id;
@@ -67,7 +67,7 @@ public class UserXMLFileHandler extends DefaultHandler {
   public int added = 0;
   public int cpid_changes = 0;
     
-  public UserXMLFileHandler(Hashtable<String, User> uht, Hashtable<String, Integer> cht, Hashtable<String, CPID> cpid, Hashtable<String, CPIDChange> cpidchange, Hashtable team, Database db, int pid, long rt, int tcday, int racday) {
+  public UserXMLFileHandler(Hashtable<String, User> uht, Hashtable<String, Integer> cht, Hashtable<String, CPID> cpid, Hashtable<String, CPIDChange> cpidchange, Hashtable<String, Team> team, Database db, int pid, long rt, int tcday, int racday) {
       userHashTable = uht;
       countryHashTable = cht;
       cpidHashTable = cpid;

@@ -32,8 +32,8 @@ public class TeamXMLFileHandler extends DefaultHandler {
   private boolean inTeams = false;
   private boolean inTeam = false;
   private boolean inUser = false;
-  private Hashtable userHashTable=null;
-  private Hashtable teamHashTable=null;
+  private Hashtable<String, User> userHashTable=null;
+  private Hashtable<String, Team> teamHashTable=null;
   private Hashtable<String, Integer> countryHashTable=null;
   private Hashtable<String, CTeam> cteamHashTable=null;
   private Database myDB=null;
@@ -70,7 +70,7 @@ public class TeamXMLFileHandler extends DefaultHandler {
   public int updated=0;
   
   
-  public TeamXMLFileHandler(Hashtable uht,  Hashtable tht, Hashtable<String, Integer> cntry, Hashtable<String, CTeam> cteam, Database db, int pid, long rt, int tcday, int racday) {
+  public TeamXMLFileHandler(Hashtable<String, User> uht,  Hashtable<String, Team> tht, Hashtable<String, Integer> cntry, Hashtable<String, CTeam> cteam, Database db, int pid, long rt, int tcday, int racday) {
       userHashTable = uht;
       countryHashTable = cntry;
       teamHashTable = tht;

@@ -30,13 +30,13 @@ public class HostXMLFileHandler extends DefaultHandler {
 
   private boolean inHosts = false;
   private boolean inHost = false;
-  private Hashtable userHashTable=null;
-  private Hashtable hostHashTable=null;
+  private Hashtable<String, User> userHashTable=null;
+  private Hashtable<String, Host> hostHashTable=null;
   private Hashtable<String, Integer> pvendorHashTable=null;
   private Hashtable<String, Integer> pmodelHashTable=null;
   private Hashtable<String, Integer> osnameHashTable=null;
-  private Hashtable cpidHashTable=null;
-  private Hashtable cpidChangesHashTable=null;
+  private Hashtable<String, CPID> cpidHashTable=null;
+  private Hashtable<String, CPIDChange> cpidChangesHashTable=null;
   private Database myDB=null;
   private String parseDataValue=null;
   private int project_id;
@@ -81,7 +81,7 @@ public class HostXMLFileHandler extends DefaultHandler {
   public int anonymous=0;
   public int update_skipped=0;
   
-  public HostXMLFileHandler(Hashtable uht, Hashtable host, Hashtable<String, Integer> pvendor, Hashtable<String, Integer> pmodel, Hashtable<String, Integer> osname, Hashtable cpid, Hashtable cpidchanges, Database db, int pid, long rt) {
+  public HostXMLFileHandler(Hashtable<String, User> uht, Hashtable<String, Host> host, Hashtable<String, Integer> pvendor, Hashtable<String, Integer> pmodel, Hashtable<String, Integer> osname, Hashtable<String, CPID> cpid, Hashtable<String, CPIDChange> cpidchanges, Database db, int pid, long rt) {
       userHashTable = uht;
       hostHashTable = host;
       pvendorHashTable = pvendor;
