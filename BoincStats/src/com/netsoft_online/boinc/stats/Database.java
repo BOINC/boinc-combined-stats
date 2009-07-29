@@ -196,6 +196,7 @@ public class Database {
             while( resultSet.next() )
             {
             	count++;
+            	if (count%100==0) log.debug("Read "+count+" entries so far");
             	long b_cpid_id = 0;
             	String user_cpid = resultSet.getString("user_cpid");
             	b_cpid_id = resultSet.getLong("b_cpid_id");
@@ -254,6 +255,7 @@ public class Database {
             statement.close();
             return count;
         } catch (SQLException s) {
+        	log.error("SQL Exception",s);
             if (statement != null) {
                 statement.close();
                 statement = null;
@@ -261,6 +263,7 @@ public class Database {
             throw new SQLException("ProjectUserRead()",s);
         }       
         catch (Exception e) {
+        	log.error("Exception",e);
         	if (statement != null) {
                 statement.close();
                 statement = null;
@@ -1022,8 +1025,8 @@ public class Database {
     public void DoGlobalUserRankings (String cpidTable, String tcTable, String racTable) throws SQLException {
         
         String query = "set @rank=0;";
-        String query2 ="set @rank := 0, @pos := 0, @country_id := null, @tc := null;";
-        String query3 ="set @rank := 0, @pos := 0, @joinyear := null, @tc := null;";
+        String query2 ="set @rank := 0, @country := 0";
+        String query3 ="set @rank := 0, @year := 0;";
         
         Statement statement = null;
 
@@ -1105,31 +1108,27 @@ public class Database {
             
             log.info("Doing global ranking by country");
             statement.execute(query2);
-            statement.execute("update "+cpidTable+" set global_country_credit = greatest("+
-          	      "@rank := if(@country_id = country_id and @tc = total_credit, @rank, if(@country_id <> country_id, 1, @rank + 1)),"+
-        	      "least(0, @pos   := if(@country_id = country_id, @pos + 1, 1)),"+
-        	      "least(0, @tc := total_credit), least(0, @country_id  := country_id)) "+
-        	      "where country_id > 0 order by country_id desc, total_credit desc;");
+            statement.execute("update "+cpidTable+" t1, (select b_cpid_id, @rank := IF (@country = country_id,"+
+            		"@rank := @rank + 1, @rank := 1) as rank, @country := country_id as country, total_credit from "+cpidTable+
+            		" where country_id > 0 order by country_id, total_credit desc) t2 "+
+            		"set global_country_credit = t2.rank where t2.b_cpid_id=t1.b_cpid_id;");
             statement.execute(query2);
-            statement.execute("update "+cpidTable+" set global_country_rac = greatest("+
-          	      "@rank := if(@country_id = country_id and @tc = rac, @rank, if(@country_id <> country_id, 1, @rank + 1)),"+
-        	      "least(0, @pos   := if(@country_id = country_id, @pos + 1, 1)),"+
-        	      "least(0, @tc := rac), least(0, @country_id  := country_id)) "+
-        	      "where country_id > 0 and rac > 0 order by country_id desc, rac desc;");
+            statement.execute("update "+cpidTable+" t1, (select b_cpid_id, @rank := IF (@country = country_id,"+
+            		"@rank := @rank + 1, @rank := 1) as rank, @country := country_id as country, total_credit from "+cpidTable+
+            		" where country_id > 0 and rac > 0 order by country_id, total_credit desc) t2 "+
+            		"set global_country_credit = t2.rank where t2.b_cpid_id=t1.b_cpid_id;");
             
             log.info("Doing global ranking by join year");
             statement.execute(query3);
-            statement.execute("update "+cpidTable+" set global_joinyear_credit = greatest("+
-          	      "@rank := if(@joinyear = join_year and @tc = total_credit, @rank, if(@joinyear <> join_year, 1, @rank + 1)),"+
-        	      "least(0, @pos   := if(@joinyear = join_year, @pos + 1, 1)),"+
-        	      "least(0, @tc := total_credit), least(0, @joinyear  := join_year)) "+
-        	      "order by join_year desc, total_credit desc;");
+            statement.execute("update "+cpidTable+" t1, (select b_cpid_id, @rank := IF (@year = join_year,"+
+            		"@rank := @rank + 1, @rank := 1) as rank, @year := join_year as year, total_credit from "+cpidTable+
+            		" where join_year >= 1999 order by join_year, total_credit desc) t2 "+
+            		"set global_joinyear_credit = t2.rank where t2.b_cpid_id=t1.b_cpid_id;");
             statement.execute(query3);
-            statement.execute("update "+cpidTable+" set global_joinyear_rac = greatest("+
-          	      "@rank := if(@joinyear = join_year and @tc = rac, @rank, if(@joinyear <> join_year, 1, @rank + 1)),"+
-        	      "least(0, @pos   := if(@joinyear = join_year, @pos + 1, 1)),"+
-        	      "least(0, @tc := rac), least(0, @joinyear  := join_year)) "+
-        	      "where rac > 0 order by join_year desc, rac desc;");
+            statement.execute("update "+cpidTable+" t1, (select b_cpid_id, @rank := IF (@year = join_year,"+
+            		"@rank := @rank + 1, @rank := 1) as rank, @year := join_year as year, rac from "+cpidTable+
+            		" where join_year >= 1999 and rac > 0 order by join_year, rac desc) t2"+
+            		"set global_joinyear_rac = t2.rank where t2.b_cpid_id=t1.b_cpid_id;");
 
             if (true == false) {
 	            log.info("Doing global ranking by 1 computer and >= 1 active projects");            
