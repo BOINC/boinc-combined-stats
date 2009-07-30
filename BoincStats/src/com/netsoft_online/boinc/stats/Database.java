@@ -1025,7 +1025,7 @@ public class Database {
     public void DoGlobalUserRankings (String cpidTable, String tcTable, String racTable) throws SQLException {
         
         String query = "set @rank=0;";
-        String query2 ="set @rank := 0, @country := 0";
+        String query2 ="set @rank := 0, @country := 0;";
         String query3 ="set @rank := 0, @year := 0;";
         
         Statement statement = null;
@@ -1115,8 +1115,8 @@ public class Database {
             statement.execute(query2);
             statement.execute("update "+cpidTable+" t1, (select b_cpid_id, @rank := IF (@country = country_id,"+
             		"@rank := @rank + 1, @rank := 1) as rank, @country := country_id as country, total_credit from "+cpidTable+
-            		" where country_id > 0 and rac > 0 order by country_id, total_credit desc) t2 "+
-            		"set global_country_credit = t2.rank where t2.b_cpid_id=t1.b_cpid_id;");
+            		" where country_id > 0 and rac > 0 order by country_id, rac desc) t2 "+
+            		"set global_country_rac = t2.rank where t2.b_cpid_id=t1.b_cpid_id;");
             
             log.info("Doing global ranking by join year");
             statement.execute(query3);
@@ -1127,7 +1127,7 @@ public class Database {
             statement.execute(query3);
             statement.execute("update "+cpidTable+" t1, (select b_cpid_id, @rank := IF (@year = join_year,"+
             		"@rank := @rank + 1, @rank := 1) as rank, @year := join_year as year, rac from "+cpidTable+
-            		" where join_year >= 1999 and rac > 0 order by join_year, rac desc) t2"+
+            		" where join_year >= 1999 and rac > 0 order by join_year, rac desc) t2 "+
             		"set global_joinyear_rac = t2.rank where t2.b_cpid_id=t1.b_cpid_id;");
 
             if (true == false) {
