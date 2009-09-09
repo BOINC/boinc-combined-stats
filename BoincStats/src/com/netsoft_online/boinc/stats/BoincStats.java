@@ -128,6 +128,7 @@ public class BoincStats {
         String dbTempFile = cr.GetValueString("database", "tempfile","/tmp/boinc.tmp");
         int lockRetries = cr.GetValueInt("lockfile", "retries",60);
         int lockRetryWait = cr.GetValueInt("lockfile","retry_wait", 5);
+        boolean useMemory = cr.GetValueBoolean("database", "usememory",false);
         
         myDB.SetDatabaseInfo(database_driver,database_name, database_user,database_pass);
         
@@ -351,6 +352,323 @@ public class BoincStats {
 		            }
 	            }            
 	            
+	            // Blasted MySQL. Need to outsmart it
+	            // Do the Global Ranking in memory (if told to)
+	            if (useMemory) {
+	            		            	
+	            	// For rank by Total Credit, The hash table is just sorted
+	            	log.info("Doing Rank by Total Credit");
+		            Vector<CPID> v = new Vector<CPID>(hCpid.values());
+		            Collections.sort(v);
+		            
+		            long rank=1;
+		            // now store the rankings, and set for next sort
+		            for (Enumeration<CPID> e = v.elements();e.hasMoreElements();) {
+		            	CPID c = (CPID) e.nextElement();
+		            	c.global_credit = rank++;
+		            	c.bCompareRac = true;
+		            	
+		            	// Since we are going over all of them, calc this now
+		            	// so we don't have to keep doing this later.
+		                if (c.create_time > 0) {
+		        	        long timestamp = (long)c.create_time * (long)1000; 
+		        	        Date when = new Date(timestamp);
+		        	        sdf = new java.text.SimpleDateFormat("yyyy");
+		        	        Integer I = new Integer(sdf.format(when));
+		        	        c.join_year = I.intValue();
+		                } else {
+		                	c.join_year = 0;
+		                }
+		            }
+		            
+		            // Now just sort, and we will get it by RAC
+		            log.info("Doing Rank by RAC");
+		            Collections.sort(v);
+		            rank = 1;
+		            for (Enumeration<CPID> e = v.elements();e.hasMoreElements();) {
+		            	CPID c = (CPID) e.nextElement();
+		            	if (c.rac > 0) c.global_rac = rank++;
+		            	c.bCompareRac = true;
+		            }
+		            
+		            // Now do Rank by total credit for 1 or more active projects
+		            log.info("Doing Rank by Total Credit for 1 or more active projects");
+		            v.clear();
+		            for (Enumeration<CPID> e = hCpid.elements();e.hasMoreElements();) {
+		            	CPID c = (CPID) e.nextElement();
+		            	if (c.active_project_count >= 1) {
+		            		c.bCompareRac = false;
+		            		v.add(c);
+		            	}
+		            }
+		            Collections.sort(v);
+		            rank = 1;
+		            for (Enumeration<CPID> e = v.elements();e.hasMoreElements();) {
+		            	CPID c = (CPID) e.nextElement();
+		            	c.global_1project_credit = rank++;
+		            	c.bCompareRac = true;
+		            }
+
+		            // Now do rank by RAC for 1 or more active projects
+		            log.info("Doing Rank by RAC for 1 or more active projects");
+		            Collections.sort(v);
+		            rank = 1;
+		            for (Enumeration<CPID> e = v.elements();e.hasMoreElements();) {
+		            	CPID c = (CPID) e.nextElement();
+		            	if (c.rac > 0) c.global_1project_rac = rank++;
+		            	c.bCompareRac = true;
+		            }
+		            		            
+		            // Now do Rank by total credit for 5 or more active projects
+		            log.info("Doing Rank by Total Credit for 5 or more active projects");
+		            v.clear();
+		            for (Enumeration<CPID> e = hCpid.elements();e.hasMoreElements();) {
+		            	CPID c = (CPID) e.nextElement();
+		            	if (c.active_project_count >= 5) {
+		            		c.bCompareRac = false;
+		            		v.add(c);
+		            	}
+		            }
+		            Collections.sort(v);
+		            rank = 1;
+		            for (Enumeration<CPID> e = v.elements();e.hasMoreElements();) {
+		            	CPID c = (CPID) e.nextElement();
+		            	c.global_5project_credit = rank++;
+		            	c.bCompareRac = true;
+		            }
+
+		            // Now do rank by RAC for 5 or more active projects
+		            log.info("Doing Rank by RAC for 5 or more active projects");
+		            Collections.sort(v);
+		            rank = 1;
+		            for (Enumeration<CPID> e = v.elements();e.hasMoreElements();) {
+		            	CPID c = (CPID) e.nextElement();
+		            	if (c.rac > 0) c.global_5project_rac = rank++;
+		            	c.bCompareRac = true;
+		            }
+		            
+		            // Now do Rank by total credit for 10 or more active projects
+		            log.info("Doing Rank by Total Credit for 10 or more active projects");
+		            v.clear();
+		            for (Enumeration<CPID> e = hCpid.elements();e.hasMoreElements();) {
+		            	CPID c = (CPID) e.nextElement();
+		            	if (c.active_project_count >= 10) {
+		            		c.bCompareRac = false;
+		            		v.add(c);
+		            	}
+		            }
+		            Collections.sort(v);
+		            rank = 1;
+		            for (Enumeration<CPID> e = v.elements();e.hasMoreElements();) {
+		            	CPID c = (CPID) e.nextElement();
+		            	c.global_10project_credit = rank++;
+		            	c.bCompareRac = true;
+		            }
+
+		            // Now do rank by RAC for 10 or more active projects
+		            log.info("Doing Rank by RAC for 10 or more active projects");
+		            Collections.sort(v);
+		            rank = 1;
+		            for (Enumeration<CPID> e = v.elements();e.hasMoreElements();) {
+		            	CPID c = (CPID) e.nextElement();
+		            	if (c.rac > 0) c.global_10project_rac = rank++;
+		            	c.bCompareRac = true;
+		            }
+		            
+		            // Now do Rank by total credit for 20 or more active projects
+		            log.info("Doing Rank by Total Credit for 20 or more active projects");
+		            v.clear();
+		            for (Enumeration<CPID> e = hCpid.elements();e.hasMoreElements();) {
+		            	CPID c = (CPID) e.nextElement();
+		            	if (c.active_project_count >= 20) {
+		            		c.bCompareRac = false;
+		            		v.add(c);
+		            	}
+		            }
+		            Collections.sort(v);
+		            rank = 1;
+		            for (Enumeration<CPID> e = v.elements();e.hasMoreElements();) {
+		            	CPID c = (CPID) e.nextElement();
+		            	c.global_20project_credit = rank++;
+		            	c.bCompareRac = true;
+		            }
+
+		            // Now do rank by RAC for 20 or more active projects
+		            log.info("Doing Rank by RAC for 20 or more active projects");
+		            Collections.sort(v);
+		            rank = 1;
+		            for (Enumeration<CPID> e = v.elements();e.hasMoreElements();) {
+		            	CPID c = (CPID) e.nextElement();
+		            	if (c.rac > 0) c.global_20project_rac = rank++;
+		            	c.bCompareRac = true;
+		            }
+		            
+		            long days30 = (System.currentTimeMillis() - (long)30*24*60*60*1000)/1000;
+		            long days90 = (System.currentTimeMillis() - (long)90*24*60*60*1000)/1000;
+		            long days365= (System.currentTimeMillis() - (long)365*24*60*60*1000)/1000;
+		                    		            
+		            // Now do Rank by total credit for New in last 30 days
+		            log.info("Doing Rank by Total Credit for new in last 30 days");
+		            v.clear();
+		            for (Enumeration<CPID> e = hCpid.elements();e.hasMoreElements();) {
+		            	CPID c = (CPID) e.nextElement();
+		            	if (c.create_time >= days30) {
+		            		c.bCompareRac = false;
+		            		v.add(c);
+		            	}
+		            }
+		            Collections.sort(v);
+		            rank = 1;
+		            for (Enumeration<CPID> e = v.elements();e.hasMoreElements();) {
+		            	CPID c = (CPID) e.nextElement();
+		            	c.global_new30days_credit = rank++;
+		            	c.bCompareRac = true;
+		            }
+
+		            // Now do rank by RAC for new in last 30 days
+		            log.info("Doing Rank by RAC for new in last 30 days");
+		            Collections.sort(v);
+		            rank = 1;
+		            for (Enumeration<CPID> e = v.elements();e.hasMoreElements();) {
+		            	CPID c = (CPID) e.nextElement();
+		            	if (c.rac > 0) c.global_new30days_rac = rank++;
+		            	c.bCompareRac = true;
+		            }
+
+		            // Now do Rank by total credit for New in last 90 days
+		            log.info("Doing Rank by Total Credit for new in last 90 days");
+		            v.clear();
+		            for (Enumeration<CPID> e = hCpid.elements();e.hasMoreElements();) {
+		            	CPID c = (CPID) e.nextElement();
+		            	if (c.create_time >= days90) {
+		            		c.bCompareRac = false;
+		            		v.add(c);
+		            	}
+		            }
+		            Collections.sort(v);
+		            rank = 1;
+		            for (Enumeration<CPID> e = v.elements();e.hasMoreElements();) {
+		            	CPID c = (CPID) e.nextElement();
+		            	c.global_new90days_credit = rank++;
+		            	c.bCompareRac = true;
+		            }
+
+		            // Now do rank by RAC for new in last 90 days
+		            log.info("Doing Rank by RAC for new in last 90 days");
+		            Collections.sort(v);
+		            rank = 1;
+		            for (Enumeration<CPID> e = v.elements();e.hasMoreElements();) {
+		            	CPID c = (CPID) e.nextElement();
+		            	if (c.rac > 0) c.global_new90days_rac = rank++;
+		            	c.bCompareRac = true;
+		            }
+		            
+		            // Now do Rank by total credit for New in last 365 days
+		            log.info("Doing Rank by Total Credit for new in last 365 days");
+		            v.clear();
+		            for (Enumeration<CPID> e = hCpid.elements();e.hasMoreElements();) {
+		            	CPID c = (CPID) e.nextElement();
+		            	if (c.create_time >= days365) {
+		            		c.bCompareRac = false;
+		            		v.add(c);
+		            	}
+		            }
+		            Collections.sort(v);
+		            rank = 1;
+		            for (Enumeration<CPID> e = v.elements();e.hasMoreElements();) {
+		            	CPID c = (CPID) e.nextElement();
+		            	c.global_new365days_credit = rank++;
+		            	c.bCompareRac = true;
+		            }
+
+		            // Now do rank by RAC for new in last 365 days
+		            log.info("Doing Rank by RAC for new in last 365 days");
+		            Collections.sort(v);
+		            rank = 1;
+		            for (Enumeration<CPID> e = v.elements();e.hasMoreElements();) {
+		            	CPID c = (CPID) e.nextElement();
+		            	if (c.rac > 0) c.global_new365days_rac = rank++;
+		            	c.bCompareRac = true;
+		            }
+		            
+		            // get the current year
+		            long timestamp = System.currentTimeMillis(); 
+        	        Date when = new Date(timestamp);
+        	        sdf = new java.text.SimpleDateFormat("yyyy");
+        	        Integer I = new Integer(sdf.format(when));
+        	        int currentYear = I.intValue();
+
+		            // join year
+        	        for (int i=1999;i<=currentYear;i++) {
+        	        	// Now do Rank by total credit for join year
+    		            log.info("Doing Rank by Total Credit for join year "+i);
+    		            v.clear();
+    		            for (Enumeration<CPID> e = hCpid.elements();e.hasMoreElements();) {
+    		            	CPID c = (CPID) e.nextElement();
+    		            	if (c.join_year == i) {
+    		            		c.bCompareRac = false;
+    		            		v.add(c);
+    		            	}
+    		            }
+    		            Collections.sort(v);
+    		            rank = 1;
+    		            for (Enumeration<CPID> e = v.elements();e.hasMoreElements();) {
+    		            	CPID c = (CPID) e.nextElement();
+    		            	c.global_joinyear_credit = rank++;
+    		            	c.bCompareRac = true;
+    		            }
+
+    		            // Now do rank by RAC for new in last 365 days
+    		            log.info("Doing Rank by RAC for join year "+i);
+    		            Collections.sort(v);
+    		            rank = 1;
+    		            for (Enumeration<CPID> e = v.elements();e.hasMoreElements();) {
+    		            	CPID c = (CPID) e.nextElement();
+    		            	if (c.rac > 0) c.global_joinyear_rac = rank++;
+    		            	c.bCompareRac = true;
+    		            }        	        	        	        	
+        	        }
+
+		            // Do Rankings by Country
+        	        log.info("Doing rankings by country");
+        	        
+        	        Hashtable<String, Integer> clist = new Hashtable<String, Integer>();
+        	        myDB.ReadCountryTable(clist);
+        	        for (Enumeration<Integer> ce = clist.elements();ce.hasMoreElements();) {
+        	        	Integer countryid = ce.nextElement();
+        	        	
+        	        	// Now do Rank by total credit for join year
+    		            log.debug("Doing Rank by Total Credit for country "+countryid.intValue());
+    		            v.clear();
+    		            for (Enumeration<CPID> e = hCpid.elements();e.hasMoreElements();) {
+    		            	CPID c = (CPID) e.nextElement();
+    		            	if (c.join_year == countryid.intValue()) {
+    		            		c.bCompareRac = false;
+    		            		v.add(c);
+    		            	}
+    		            }
+    		            Collections.sort(v);
+    		            rank = 1;
+    		            for (Enumeration<CPID> e = v.elements();e.hasMoreElements();) {
+    		            	CPID c = (CPID) e.nextElement();
+    		            	c.global_joinyear_credit = rank++;
+    		            	c.bCompareRac = true;
+    		            }
+
+    		            // Now do rank by RAC for new in last 365 days
+    		            log.debug("Doing Rank by RAC for country "+countryid.intValue());
+    		            Collections.sort(v);
+    		            rank = 1;
+    		            for (Enumeration<CPID> e = v.elements();e.hasMoreElements();) {
+    		            	CPID c = (CPID) e.nextElement();
+    		            	if (c.rac > 0) c.global_joinyear_rac = rank++;
+    		            	c.bCompareRac = true;
+    		            }         	        	
+        	        }
+
+	            }
+	            
+	            
 	            // 
 	            // Dump hashes into their backup tables
 	            // TODO: INI option to retire/not retire old cpids 
@@ -390,8 +708,51 @@ public class BoincStats {
 			            	        joinyear = sdf.format(when);		            	        
 		            			}
 		            			if (myCPID.name == null) myCPID.name = "";
-		            			
-		            			Out.println(myCPID.b_cpid_id+"\t"+myCPID.user_cpid+"\t"+myDB.MakeSafe(myCPID.name)+"\t"+joindate+"\t"+joinyear+"\t"+myCPID.country_id+"\t"+myCPID.project_count+"\t"+myCPID.active_project_count+"\t0\t"+myCPID.total_credit+"\t"+myCPID.rac+"\t"+myCPID.rac_time+"\t"+myCPID.hosts_visible+"\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t");
+		            			if (useMemory) {
+		            				String s = ""+myCPID.b_cpid_id+"\t"+myCPID.user_cpid+"\t"+myDB.MakeSafe(myCPID.name)+"\t"+joindate+"\t"+joinyear+"\t"+myCPID.country_id+"\t"+myCPID.project_count+"\t"+myCPID.active_project_count+"\t0\t"+myCPID.total_credit+"\t"+myCPID.rac+"\t"+myCPID.rac_time+"\t"+myCPID.hosts_visible+"\t"+myCPID.global_credit;
+		            				
+		            				// global_rac		            				
+		            					s+= "\t"+myCPID.global_rac;
+		            				// global_new30days_credit
+		            					s+= "\t"+myCPID.global_new30days_credit;
+		            			    // global_new30days_rac
+		            					s+= "\t"+myCPID.global_new30days_rac;
+		            			    // global_new90days_credit
+		            					s+= "\t"+myCPID.global_new90days_credit;
+		            			    // global_new90days_rac
+		            					s+= "\t"+myCPID.global_new90days_rac;
+		            			    // global_new365days_credit
+		            					s+= "\t"+myCPID.global_new365days_credit;
+		            			    // global_new365days_rac
+		            					s+= "\t"+myCPID.global_new365days_rac;
+		            			    // global_1project_credit
+		            					s+= "\t"+myCPID.global_1project_credit;
+		            			    // global_1project_rac
+		            					s+= "\t"+myCPID.global_1project_rac;
+		            			    // global_5project_credit
+		            					s+= "\t"+myCPID.global_5project_credit;
+		            			    // global_5project_rac
+		            					s+= "\t"+myCPID.global_5project_rac;
+		            			    // global_10project_credit
+		            					s+= "\t"+myCPID.global_10project_credit;
+		            			    // global_10project_rac
+		            					s+= "\t"+myCPID.global_10project_rac;
+		            			    // global_20project_credit
+		            					s+= "\t"+myCPID.global_20project_credit;
+		            			    // global_20project_rac
+		            					s+= "\t"+myCPID.global_20project_rac;
+		            			    // global_country_credit
+		            					s+= "\t"+myCPID.global_country_credit;
+		            			    // global_country_rac
+		            					s+= "\t"+myCPID.global_country_rac;
+		            			    // global_joinyear_credit
+		            					s+= "\t"+myCPID.global_joinyear_credit;
+		            			    // global_joinyear_rac
+		            					s+= "\t"+myCPID.global_joinyear_rac;
+		            				Out.println(s);
+		            			} else {
+		            				Out.println(myCPID.b_cpid_id+"\t"+myCPID.user_cpid+"\t"+myDB.MakeSafe(myCPID.name)+"\t"+joindate+"\t"+joinyear+"\t"+myCPID.country_id+"\t"+myCPID.project_count+"\t"+myCPID.active_project_count+"\t0\t"+myCPID.total_credit+"\t"+myCPID.rac+"\t"+myCPID.rac_time+"\t"+myCPID.hosts_visible+"\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t");
+		            			}
 		            		}
 		            	}
 		            	//catch (java.sql.SQLException s) {
@@ -509,7 +870,9 @@ public class BoincStats {
 	            // TODO: Remove/speed up(?) computer count rankings
 	            if (errorHappened == false) {
 	            	try {
-	            		myDB.DoGlobalUserRankings("cpid_bk","rank_user_tc_bk","rank_user_rac_bk");
+	            		if (useMemory == false) {
+	            			myDB.DoGlobalUserRankings("cpid_bk","rank_user_tc_bk","rank_user_rac_bk");
+	            		}
 	            		myDB.DoGlobalCTeamRankings("cteams_bk", "rank_team_tc_bk", "rank_team_rac_bk");
 	            	}
 	            	catch (java.sql.SQLException s) {
@@ -520,9 +883,24 @@ public class BoincStats {
 	            
 	            // 
 	            // Calculate Country totals and rankings
-	            if (errorHappened == false) {
+	            if (errorHappened == false && useMemory == false) {
 	            	try {
 	            		myDB.DoGlobalCountryRankings("cpid_bk","country_rank_bk");
+	            	}
+	            	catch (java.sql.SQLException s) {
+	            		log.error("SQL Error",s);
+	            		errorHappened = true;
+	            	}
+	            }
+
+	            if (errorHappened == false && useMemory == true) {
+	            	try {
+	            		
+		                log.info("Adding entries to user tc rankings table");
+		                myDB.RunQuery("insert into rank_user_tc_bk (b_cpid_id, user_cpid, name, country_id,active_computer_count,project_count,active_project_count, join_date, join_year, total_credit, rac, rac_time, global_credit, global_new30days_credit, global_new90days_credit, global_new365days_credit, global_1project_credit, global_5project_credit, global_10project_credit, global_20project_credit, global_country_credit, global_joinyear_credit ) (select b_cpid_id, user_cpid, user_name, country_id, active_computer_count, project_count, active_project_count, join_date, join_year, total_credit, rac, rac_time, global_credit, global_new30days_credit, global_new90days_credit, global_new365days_credit, global_1project_credit, global_5project_credit, global_10project_credit, global_20project_credit, global_country_credit, global_joinyear_credit from cpid_bk)");            
+		                
+		                log.info("Adding entries to user rac rankings table");
+		                myDB.RunQuery("insert into rank_user_rac_bk (b_cpid_id, user_cpid, name, country_id,active_computer_count,project_count,active_project_count, join_date,join_year, total_credit, rac, rac_time, global_rac, global_new30days_rac, global_new90days_rac, global_new365days_rac, global_1project_rac, global_5project_rac, global_10project_rac, global_20project_rac, global_country_rac, global_joinyear_rac) (select b_cpid_id, user_cpid, user_name, country_id, active_computer_count, project_count, active_project_count, join_date, join_year, total_credit, rac, rac_time, global_rac, global_new30days_rac, global_new90days_rac, global_new365days_rac, global_1project_rac, global_5project_rac, global_10project_rac, global_20project_rac, global_country_rac, global_joinyear_rac from cpid_bk)");
 	            	}
 	            	catch (java.sql.SQLException s) {
 	            		log.error("SQL Error",s);

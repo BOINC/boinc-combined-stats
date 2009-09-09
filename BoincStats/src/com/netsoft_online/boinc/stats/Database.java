@@ -142,7 +142,7 @@ public class Database {
 
     public void ReadCountryTable (Hashtable<String, Integer> myCountries) throws SQLException{
         
-        String query = "select country_id, country from b_country";
+        String query = "select country_id, country from country";
         myCountries.clear();
 
         Statement statement = null;
@@ -614,33 +614,38 @@ public class Database {
         
         if (psCPIDAddEntry == null || sCPIDAddEntryTable.compareToIgnoreCase(tablename) != 0) {
         	if (psCPIDAddEntry != null) psCPIDAddEntry.close();
-        	psCPIDAddEntry = cDBConnection.prepareStatement("insert ignore into "+tablename+" (b_cpid_id, user_cpid, user_name, join_date, country_id, project_count, active_project_count, active_computer_count, total_credit, rac, rac_time,hosts_visible) values (?,?,?,?,?,?,?,?,?,?,?,?)");
+        	psCPIDAddEntry = cDBConnection.prepareStatement("insert ignore into "+tablename+" (b_cpid_id, user_cpid, user_name, join_date, join_year, country_id, project_count, active_project_count, active_computer_count, total_credit, rac, rac_time,hosts_visible) values (?,?,?,?,?,?,?,?,?,?,?,?,?)");
         	sCPIDAddEntryTable = tablename;
         }
         
         String join_date;
+        String join_year;
         if (create_time > 0) {
 	        long timestamp = (long)create_time * (long)1000; 
 	        Date when = new Date(timestamp);
 	        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
 	        sdf.setTimeZone(TimeZone.getDefault());
 	        join_date = sdf.format(when);
+	        sdf = new java.text.SimpleDateFormat("yyyy");
+	        join_year = sdf.format(when);
         } else {
         	join_date = "0000-00-00";
+        	join_year = "0000";
         }
         try {
         	psCPIDAddEntry.setLong(1,b_cpid_id);
         	psCPIDAddEntry.setString(2, user_cpid);
         	psCPIDAddEntry.setString(3, user_name);
         	psCPIDAddEntry.setString(4, join_date);
-        	psCPIDAddEntry.setInt(5, country_id);
-        	psCPIDAddEntry.setInt(6, project_count);
-        	psCPIDAddEntry.setInt(7, active_project_count);
-        	psCPIDAddEntry.setInt(8, active_computer_count);
-        	psCPIDAddEntry.setLong(9,total_credit);
-        	psCPIDAddEntry.setLong(10,rac);
-        	psCPIDAddEntry.setLong(11,rac_time);
-        	psCPIDAddEntry.setString(12,hostsShown);
+        	psCPIDAddEntry.setString(5, join_year);
+        	psCPIDAddEntry.setInt(6, country_id);
+        	psCPIDAddEntry.setInt(7, project_count);
+        	psCPIDAddEntry.setInt(8, active_project_count);
+        	psCPIDAddEntry.setInt(9, active_computer_count);
+        	psCPIDAddEntry.setLong(10,total_credit);
+        	psCPIDAddEntry.setLong(11,rac);
+        	psCPIDAddEntry.setLong(12,rac_time);
+        	psCPIDAddEntry.setString(13,hostsShown);
         	
         	int res = psCPIDAddEntry.executeUpdate();
             if (res != 1) {
@@ -2172,6 +2177,95 @@ public class Database {
         }
     }
     
+    public void CreateCPIDMemTable (String tablename) throws SQLException {
+        
+    	String query = "CREATE TEMPORARY TABLE "+tablename;
+    	query += " (  `b_cpid_id` bigint(20) NOT NULL,"+
+		" `user_cpid` varchar(32) NOT NULL default '',  `user_name` varchar(255) NOT NULL default '',"+
+		" `join_date` DATE NOT NULL default '0000-00-00',"+
+		" `join_year` varchar(4) NOT NULL default '',"+
+		" `country_id` smallint(6) default NULL,"+
+		" `project_count` smallint(6) NOT NULL default '0',  `active_project_count` smallint(6) NOT NULL default '0',"+
+		" `active_computer_count` int(11) NOT NULL default '0',"+
+		" `total_credit` bigint(20) NOT NULL default '0',  `rac` bigint(20) NOT NULL default '0',"+
+		" `rac_time` bigint(20) NOT NULL default '0',"+
+		"`hosts_visible` VARCHAR(1) NOT NULL DEFAULT 'N',"+
+		"`global_credit` BIGINT UNSIGNED,"+
+		"`global_rac` BIGINT UNSIGNED,"+
+		"`global_new30days_credit` BIGINT UNSIGNED,"+
+		"`global_new30days_rac` BIGINT UNSIGNED,"+
+		"`global_new90days_credit` BIGINT UNSIGNED,"+
+		"`global_new90days_rac` BIGINT UNSIGNED,"+
+		"`global_new365days_credit` BIGINT UNSIGNED,"+
+		"`global_new365days_rac` BIGINT UNSIGNED,"+
+		"`global_1project_credit` BIGINT UNSIGNED,"+
+		"`global_1project_rac` BIGINT UNSIGNED,"+
+		"`global_5project_credit` BIGINT UNSIGNED,"+
+		"`global_5project_rac` BIGINT UNSIGNED,"+
+		"`global_10project_credit` BIGINT UNSIGNED,"+
+		"`global_10project_rac` BIGINT UNSIGNED,"+
+		"`global_20project_credit` BIGINT UNSIGNED,"+
+		"`global_20project_rac` BIGINT UNSIGNED,"+
+		"`global_country_credit` BIGINT UNSIGNED,"+
+		"`global_country_rac` BIGINT UNSIGNED,"+
+		"`global_joinyear_credit` BIGINT UNSIGNED,"+
+		"`global_joinyear_rac` BIGINT UNSIGNED,"+
+//		"`computer1_1project_credit` BIGINT UNSIGNED,"+
+//		"`computer1_1project_rac` BIGINT UNSIGNED,"+
+//		"`computer1_5project_credit` BIGINT UNSIGNED,"+
+//		"`computer1_5project_rac` BIGINT UNSIGNED,"+
+//		"`computer1_10project_credit` BIGINT UNSIGNED,"+
+//		"`computer1_10project_rac` BIGINT UNSIGNED,"+
+//		"`computer1_20project_credit` BIGINT UNSIGNED,"+
+//		"`computer1_20project_rac` BIGINT UNSIGNED,"+
+//		"`computer5_1project_credit` BIGINT UNSIGNED,"+
+//		"`computer5_1project_rac` BIGINT UNSIGNED,"+
+//		"`computer5_5project_credit` BIGINT UNSIGNED,"+
+//		"`computer5_5project_rac` BIGINT UNSIGNED,"+
+//		"`computer5_10project_credit` BIGINT UNSIGNED,"+
+//		"`computer5_10project_rac` BIGINT UNSIGNED,"+
+//		"`computer5_20project_credit` BIGINT UNSIGNED,"+
+//		"`computer5_20project_rac` BIGINT UNSIGNED,"+
+//		"`computer10_1project_credit` BIGINT UNSIGNED,"+
+//		"`computer10_1project_rac` BIGINT UNSIGNED,"+
+//		"`computer10_5project_credit` BIGINT UNSIGNED,"+
+//		"`computer10_5project_rac` BIGINT UNSIGNED,"+
+//		"`computer10_10project_credit` BIGINT UNSIGNED,"+
+//		"`computer10_10project_rac` BIGINT UNSIGNED,"+
+//		"`computer10_20project_credit` BIGINT UNSIGNED,"+
+//		"`computer10_20project_rac` BIGINT UNSIGNED,"+
+		" PRIMARY KEY  (`b_cpid_id`)"+
+///		"INDEX `country_id`(`country_id`),"+
+///		"INDEX `join_year`(`join_year`),"+
+///		"INDEX `user_cpid`(`user_cpid`),"+
+///		"INDEX `user_name`(`user_name`),"+
+///		"INDEX `active_project_count`(`active_project_count`)"+
+//		"INDEX `active_computer_count`(`active_computer_count`)"+
+		") ENGINE=memory DEFAULT CHARSET=utf8;";
+    	
+    	Statement statement = null;
+    	try {   
+    		
+            statement = cDBConnection.createStatement();
+            
+            log.debug("Creating table "+tablename);
+            //statement.execute(query);
+            statement.execute(query);
+            
+            // clean up
+            statement.close();
+            statement = null;
+    
+            //CommitTransaction();            
+            return;            
+        } catch (SQLException s) {
+            if (statement != null) {
+                statement.close();
+                statement = null;
+            }
+            throw new SQLException("CreateCPIDTable()",s);
+        }
+    }    
     public void CreateCPIDTable (String tablename) throws SQLException {
         
     	String query = "CREATE TABLE "+tablename;

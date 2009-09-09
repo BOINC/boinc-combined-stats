@@ -21,16 +21,54 @@ package com.netsoft_online.boinc.stats;
 // 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 //
-public class CPID {
+public class CPID implements Comparable<Object> {
     long b_cpid_id;
     String user_cpid;
     String name;
-    int create_time;
-    int country_id;
-    int project_count;
-    int active_project_count;
-    long total_credit;
-    long rac;
-    long rac_time;
+    int create_time=0;
+    int country_id=0;
+    int project_count=0;
+    int active_project_count=0;
+    long total_credit=0;
+    long rac=0;
+    long rac_time=0;
     String hosts_visible;
+    long global_credit=0;
+    long global_rac=0;
+    long global_new30days_credit=0;
+    long global_new30days_rac=0;
+    long global_new90days_credit=0;
+    long global_new90days_rac=0;
+    long global_new365days_credit=0;
+    long global_new365days_rac=0;
+    long global_1project_credit=0;
+    long global_1project_rac=0;
+    long global_5project_credit=0;
+    long global_5project_rac=0;
+    long global_10project_credit=0;
+    long global_10project_rac=0;
+    long global_20project_credit=0;
+    long global_20project_rac=0;
+    long global_country_credit=0;
+    long global_country_rac=0;
+    long global_joinyear_credit=0;
+    long global_joinyear_rac=0;
+    
+    int join_year=0;
+    public boolean bCompareRac=false;
+
+    
+    public int compareTo(Object o) {
+    	
+    	CPID co = (CPID) o;
+    	Long l,l2;
+    	if (bCompareRac) {
+    		l = new Long(co.rac);
+    		l2 = new Long(this.rac);
+    	} else {
+    		l = new Long(co.total_credit);
+    		l2 = new Long(this.total_credit);    		
+    	}
+    	return l.compareTo(l2);
+    }
 }
