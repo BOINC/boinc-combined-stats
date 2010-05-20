@@ -1,83 +1,86 @@
 <?
-header('Content-type: text/xml');
+header ( 'Content-type: text/xml' );
 
-$project = $_GET["projectid"];
+$project = $_GET ["projectid"];
 
 print "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\n";
 print "<project_active_host_count_history>\n";
 print "<title>Project Active Host History</title>\n";
 
-include ('/home/virtual/netsoft-online.com/home/boinc/dbconnect.php');
+global $dbhost;
+global $dblogin;
+global $dbpassword;
+global $dbname;
 
-$connect=mysql_connect($dbhost,$dblogin,$dbpassword);
-mysql_select_db($dbname);
+include ('../dbconnect.php');
 
-if ($connect != 0)
-{
+$dbhandle = mysqli_connect ( $dbhost, $dblogin, $dbpassword );
 
-   $query = "select name from b_projects where project_id=$project";
-   $res = mysql_query($query);
-   if (!$res) {
-     exit();
-   }
-
-   $row = mysql_fetch_array($res);
-   $project_name = $row["name"];
-   mysql_free_result($res);
- 
-   print "    <project_name>$project_name</project_name>\n";
- 
-   $query = "select value from b_currentday where key_item='year'";
-   $res = mysql_query($query);
-   if (!$res) {
-     exit();
-   }
-
-   $row = mysql_fetch_array($res);
-   $startday = $row["value"];
-   mysql_free_result($res);
-  
-   $fd = "";
-   $ld = ""; 
-   $min = "";
-   $max = "";
-
-   $query = "select * from b_project_active_hosts_hist where project_id=$project ";
-
-   $res = mysql_query($query);
-   if (!$res) {
-     exit();
-   }
-   
-   $count = 1;
-
-   while ($row = mysql_fetch_array($res)) 
-   {
-
-	$start = $startday + 1;
-   	if ($start > 365) $start = 1;
-	$end = $startday;
-
-	while ($start != $end) {
-		$rstring = "d_$start";
-		$c = $row[$rstring];
-		print "   <day_$count>$c</day_$count>\n";
-
-		$start = $start + 1;
-		if ($start > 365) $start = 1;
-                $count++;
-	}      
-
-	$rstring = "d_$start";
-	$c = $row[$rstring];
-	print "   <day_$count>$c</day_$count>\n";
-
-   }
-   
-   mysql_free_result($res);
+if ($dbhandle) {
+	mysqli_select_db ( $dbhandle, $dbname );
+	$query = "select name, active_hosts from projects where project_id=$project";
+	$res = mysqli_query ( $dbhandle, $query );
+	if (! $res) {
+		exit ();
+	}
+	
+	$row = mysqli_fetch_array ( $res );
+	$project_name = $row ["name"];
+	$last_point = $row ["active_hosts"];
+	mysqli_free_result ( $res );
+	
+	print "    <project_name>$project_name</project_name>\n";
+	
+	$query = "select value from currentday where key_item='history90'";
+	$res = mysqli_query ( $dbhandle, $query );
+	if (! $res) {
+		exit ();
+	}
+	
+	$startday = 1;
+	$row = mysqli_fetch_array ( $res );
+	$startday = $row ["value"];
+	mysqli_free_result ( $res );
+	if (! $startday)
+		$startday = 1;
+	
+	$fd = "";
+	$ld = "";
+	$min = "";
+	$max = "";
+	
+	$query = "select * from history_projects_ahosts where project_id=$project ";
+	
+	$res = mysqli_query ( $dbhandle, $query );
+	if (! $res) {
+		exit ();
+	}
+	
+	while ( ($row = mysqli_fetch_array ( $res )) ) {
+		
+		$start = $startday + 1;
+		if ($start > 91)
+			$start = 1;
+		$end = $startday;
+		
+		for($count = 1; $count < 91; $count ++) {
+			$rstring = "d_$start";
+			$c = $row [$rstring];
+			print "   <day_$count>$c</day_$count>\n";
+			
+			$start = $start + 1;
+			if ($start > 91)
+				$start = 1;
+		}
+		
+		print "   <day_$count>$last_point</day_$count>\n";
+	
+	}
+	
+	mysqli_free_result ( $res );
 
 } else {
-    print "   </database_error>\n";
+	print "   </database_error>\n";
 }
 
 print "</project_active_host_count_history>\n";
