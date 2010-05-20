@@ -40,7 +40,7 @@ define("LAN_142", "DB Error");
 /* bp.php */
 define("LAN_150", " Statistics");
 
-/* u_rank.php */
+/* utc_rank.php & urac_rank.php*/
 define("LAN_160", "Users currently doing the most work");
 define("LAN_161", "Users who have done the most work");
 define("LAN_162", "Users who have done the most work on a single computer");
@@ -71,7 +71,17 @@ define("LAN_186", "Users who are currently doing the most work on a single compu
 define("LAN_187", "Users who are currently doing the most work on 5 or fewer computers and are actively participating in 5 or more projects");
 define("LAN_188", "Users who are currently doing the most work on 10 or fewer computers and are actively participating in 5 or more projects");
 define("LAN_189", "Users who are currently doing the most work on 20 or fewer computers and are actively participating in 5 or more projects");
-
+define("LAN_190", "Users new to BOINC in the last 30 days");
+define("LAN_191", "Users new to BOINC in the last 90 days");
+define("LAN_192", "Users new to BOINC in the last year");
+define("LAN_193", "Users Activly participating in 1 or more projects");
+define("LAN_194", "Users Activly participating in 5 or more projects");
+define("LAN_195", "Users Activly participating in 10 or more projects");
+define("LAN_196", "Users Activly participating in 20 or more projects");
+define("LAN_197", "Users who started participating in BOINC in");
+define("LAN_198", "Users in the country of");
+define("LAN_199a", "Rank by total work done for");
+define("LAN_199b", "Rank by recent work done for");
 
 /* project_graph.php */
 /* Note: graphs are stuck on English for the moment, these are here for future translation */
@@ -125,6 +135,15 @@ define("LAN_250", "Project User ID:");
 define("LAN_251", "Number of Computers:");
 define("LAN_252", "90 Day History");
 define("LAN_253", "52 Week History");
+define("LAN_400", "Users that started in the last 30 days:");
+define("LAN_401", "Users that started in the last 90 days:");
+define("LAN_402", "Users that started in the last year:");
+define("LAN_403", "Users ACTIVE in 1 or more projects:");
+define("LAN_404", "Users ACTIVE in 5 or more projects:");
+define("LAN_405", "Users ACTIVE in 10 or more projects:");
+define("LAN_406", "Users ACTIVE in 20 or more projects:");
+define("LAN_407", "Join Date:");
+define("LAN_408", "Team Rank");
 
 
 /* get_cpcs.php */
@@ -142,7 +161,7 @@ define("LAN_274", "Project Name");
 define("LAN_275", "Project Rank");
 define("LAN_276", "User CPID");
 define("LAN_277", "User Search Results");
-
+define("LAN_278", "Project Total Credit");
 
 /* bp_functions.php */
 define("LAN_300", "Project Summary");
@@ -191,8 +210,13 @@ define("LAN_342", "Total Credit");
 define("LAN_343", "Recent Average Credit");
 define("LAN_344", "Active Projects");
 define("LAN_345", "Total Projects");
-
-
-
-
+define("LAN_346", "Country Count");
+define("LAN_347", "Rank by Country");
+define("LAN_348", "Rank by year joined");
+define("LAN_349", "Join Date");
+define("LAN_350", "Project Count");
+define("LAN_351", "1 or more ACTIVE projects");
+define("LAN_352", "5 or more ACTIVE projects");
+define("LAN_353", "10 or more ACTIVE projects");
+define("LAN_354", "20 or more ACTIVE projects");
 ?>

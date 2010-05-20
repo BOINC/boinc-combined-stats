@@ -11,5 +11,4 @@ $db_host = "127.0.0.1";
 $db_login = "my_sql_login";
 $db_pass = "my_sql_password";
 $db_db = "my_sql_database";
-$db_e107 = "my_e107_sql_database";
 ?>
