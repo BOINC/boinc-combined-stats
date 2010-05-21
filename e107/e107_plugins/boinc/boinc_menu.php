@@ -20,7 +20,7 @@ if (defined ( "BULLET" )) {
 $dbhandle = statsdb_connect ();
 if ($dbhandle) {
 	
-	$query = "select name,project_id from b_projects where shown='Y' and project_id <> 19 order by name";
+	$query = "select name,project_id from projects where shown='Y' and project_id <> 19 order by name";
 	
 	$res = mysqli_query ( $dbhandle, $query );
 	if (! $res) {
