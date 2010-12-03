@@ -55,7 +55,7 @@ if ($dbhandle) {
 			$type_string = "Recent Average Credit";
 			break;
 		case 5 :
-			$query .= "history_project_tc";
+			$query .= "history_projects_tc";
 			$type_string = "Credit granted per day";
 			break;
 		case 6 :

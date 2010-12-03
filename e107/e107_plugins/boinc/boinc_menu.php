@@ -20,14 +20,14 @@ if (defined ( "BULLET" )) {
 $dbhandle = statsdb_connect ();
 if ($dbhandle) {
 	
-	$query = "select name,project_id from projects where shown='Y' and project_id <> 19 order by name";
+	$query = "select name,project_id from projects where shown='Y' and project_id <> 1 order by name";
 	
 	$res = mysqli_query ( $dbhandle, $query );
 	if (! $res) {
 		$text = LAN_142;
 	} else {
 		
-		$text = "$bullet <a href=\"" . e_PLUGIN . "boinc/bp.php?project=19\">BOINC Combined</a>";
+		$text = "$bullet <a href=\"" . e_PLUGIN . "boinc/bp.php?project=1\">BOINC Combined</a>";
 		
 		while ( $row = mysqli_fetch_array ( $res ) ) {
 			$name = $row ["name"];
