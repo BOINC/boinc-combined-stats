@@ -666,6 +666,9 @@ public class BoincStats {
     		            }         	        	
         	        }
 
+        	        v.clear();
+        	        v = null;
+        	        System.gc();
 	            }
 	            
 	            
@@ -774,7 +777,7 @@ public class BoincStats {
 		            	log.error("Exception",e);		            	
 		            }
 		            
-		            // Enumerate the hCpid hash
+		            // Enumerate the hCTeam hash
 		            // TODO: Add INI option to keep old teams
 		            log.info("Saving cteam data");
 		            k = hCTeam.keys();
@@ -793,6 +796,15 @@ public class BoincStats {
 		            	}
 		            }
 	            }
+	            
+	            //
+	            // Clear the hashes, not used any more
+	            // but other things need memory
+	            //
+	            hCpid.clear();
+	            hCTeam.clear();
+	            System.gc();
+	            System.gc();
 	            
 	            //
 	            // Create a "mapping" table so we have an easy way
@@ -1210,7 +1222,7 @@ public class BoincStats {
             	log.warn("Table "+oldHistoryTable+" didn't exist - new project?");
         	} catch (java.sql.SQLException s) { }
         	
-            // Insert records
+            // Insert records        	
         	if (racTable==true)
         		myDB.ProcessRACHistory(oldHistoryTable, newHistoryTable, dataTable, keyColumnName, dataColumnName, ymm, history_day);
         	else

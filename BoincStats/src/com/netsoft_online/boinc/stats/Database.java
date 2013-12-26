@@ -891,7 +891,7 @@ public class Database {
                 cpcs = resultSet.getString("credit_per_cpu_sec");
                 double tval = resultSet.getDouble("credit_per_cpu_sec");
                 
-                if (tval > 1.0) {
+                if (tval > 300.0) {
                     validHost = false;
                     log.info("Host "+host_cpid+" has a bad credit_per_cpu_sec ("+cpcs+")");
                 }
@@ -1349,7 +1349,7 @@ public class Database {
 
             log.info("Creating Country totals");
             statement.execute(query);
-            statement.execute("insert into "+countryTable+" (country_id, total_credit, rac,user_count) (select country_id, sum(total_credit),sum(rac),count(*) from "+cpidTable+" group by country_id);");
+            statement.execute("insert into "+countryTable+" (country_id, total_credit, rac,user_count) (select country_id, sum(total_credit),sum(rac),count(*) from "+cpidTable+" where country_id is not null group by country_id);");
 
             log.info("Doing country global ranking by total credit");
             statement.execute(query);
@@ -2086,7 +2086,7 @@ public class Database {
     	// put in the "d_" column names
     	for (int i=1;i<=91;i++) {
     		if (i == day) {
-    			query += ","+sourceTable+"."+dataColumnName;
+    			query += ",ifnull("+sourceTable+"."+dataColumnName+",0)";
     		} else {
     			query += ",ifnull("+oldHistoryTable+".d_"+i+",0)";
     		}
@@ -2123,8 +2123,9 @@ public class Database {
         } catch (SQLException s) {
             if (statement != null) {
                 statement.close();
-                statement = null;
+                statement = null;                
             }
+            log.error("["+query+"]");
             throw new SQLException("ProcessHistory()", s);
         }
         catch (Exception e) {
@@ -2143,7 +2144,7 @@ public class Database {
     	// put in the "d_" column names
     	for (int i=1;i<=91;i++) {
     		if (i == day) {
-    			query += ","+sourceTable+"."+dataColumnName;
+    			query += ",ifnull("+sourceTable+"."+dataColumnName+",0)";
     		} else {
     			query += ",ifnull("+oldHistoryTable+".d_"+i+",0)";
     		}
@@ -2166,6 +2167,7 @@ public class Database {
                 statement.close();
                 statement = null;
             }
+            log.error("["+query+"]");
             throw new SQLException("ProcessRACHistory()", s);
         }
         catch (Exception e) {
