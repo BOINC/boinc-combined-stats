@@ -1383,6 +1383,7 @@ public class Database {
         // update user count, total credit, rac
         String query1 = "update projects, (select count(*) as cnt, sum(total_credit) as tc, sum(rac) as rc from "+cpidTable+" where project_count > 0) cc set projects.user_count=cc.cnt, projects.total_credit=cc.tc,projects.rac=cc.rc where projects.project_id=1";
         String query2 = "update projects, (select count(*) as cnt from "+cpidTable+" where project_count > 0 and rac > 0) cc set projects.active_users=cc.cnt where projects.project_id=1";
+        String query1a = "update projects, (select sum(total_credit) as tc, sum(rac) as rc from projects where include_combined='Y') cc set projects.total_credit=cc.tc, projects.rac=cc.rc where projects.project_id=1";
         
         // update country count
         String query3 = "update projects, (select count(*) as cnt from (select distinct country_id from "+cpidTable+") uc) cc set projects.country_count=cc.cnt where projects.project_id=1";
@@ -1401,8 +1402,10 @@ public class Database {
         try {            
             statement = cDBConnection.createStatement();
 
-            log.info("updating project 1 user count, total credit, rac");
+            log.info("updating project 1 user count");
             statement.execute(query1);
+            log.info("updating project 1 total_credit and rac");
+            statement.execute(query1a);
             log.info("updating project 1 active user count");
             statement.execute(query2);
             log.info("updating project 1 country count");
@@ -3556,7 +3559,7 @@ public class Database {
     
     public void DropTable (String table) throws SQLException {
         
-    	String query = "DROP TABLE `"+table;
+    	String query = "DROP TABLE `"+table + "`";
     	
     	Statement statement = null;
     	try {   
